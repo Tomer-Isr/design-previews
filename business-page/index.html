@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Studio Noga — /business · превью</title>
+<style>
+  :root { --paper:#F7F3EC; --press:#EFE8DC; --ink:#1B1916; --soft:#574F46; --forest:#313F36; --line:rgba(27,25,22,.16); }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; background:var(--paper); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:clamp(24px,7vw,64px); text-align:center; }
+  .eyebrow { font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--forest); margin-bottom:18px; }
+  h1 { font-family:Georgia,"Times New Roman",serif; font-weight:400;
+    font-size:clamp(28px,7vw,46px); line-height:1.1; margin:0 0 12px; max-width:18ch; }
+  p.sub { color:var(--soft); font-size:clamp(14px,3.6vw,16px); line-height:1.6; margin:0 0 clamp(28px,6vw,40px); max-width:42ch; }
+  .langs { display:flex; flex-direction:column; gap:12px; width:min(360px,100%); }
+  a.lang { display:flex; align-items:center; justify-content:space-between;
+    text-decoration:none; color:var(--ink); background:var(--paper);
+    border:1px solid var(--line); border-radius:14px;
+    padding:18px 22px; font-size:18px; transition:transform .2s ease, border-color .2s ease, background .2s ease; }
+  a.lang:hover { transform:translateY(-2px); border-color:var(--forest); background:var(--press); }
+  a.lang b { font-family:Georgia,serif; font-weight:400; }
+  a.lang span { font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--forest); }
+  .note { margin-top:clamp(28px,6vw,40px); font-size:12px; color:var(--soft); line-height:1.6; max-width:40ch; }
+</style>
+</head>
+<body>
+  <div class="eyebrow">Studio Noga · design preview</div>
+  <h1>Страница «для бизнеса» — /business</h1>
+  <p class="sub">Выбери язык. Откроется как настоящий сайт — листай, читай, отмечай правки.</p>
+  <div class="langs">
+    <a class="lang" href="he.html"><b>עברית</b><span>HE · RTL</span></a>
+    <a class="lang" href="ru.html"><b>Русский</b><span>RU</span></a>
+    <a class="lang" href="en.html"><b>English</b><span>EN</span></a>
+  </div>
+  <p class="note">Это статик-снимок ветки <b>feature/for-business-page</b>. Форма «оставить email» здесь неактивна (на проде она шлёт письма-образцы). Дизайн = эстетика салона Fashion Edit.</p>
+</body>
+</html>
