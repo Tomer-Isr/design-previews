@@ -1,0 +1,285 @@
+<title>TuneScript — живой фон</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { color-scheme: dark; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #0f1115;
+    color: #e7e9ee;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 12px 48px;
+    gap: 18px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── Панель управления ─── */
+  .panel {
+    width: 100%;
+    max-width: 420px;
+    background: #171a20;
+    border: 1px solid #262b34;
+    border-radius: 16px;
+    padding: 14px 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .panel h1 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #aab2c0;
+  }
+  .panel .hint { font-size: 12px; line-height: 1.5; color: #7f8998; margin-top: -6px; }
+
+  .themes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .themes button {
+    font: inherit; font-size: 12px; font-weight: 600;
+    padding: 9px 4px; border-radius: 10px; cursor: pointer;
+    border: 1px solid #2c323d; background: #1e232b; color: #cdd3dd;
+    transition: all .15s;
+  }
+  .themes button[aria-pressed="true"] {
+    border-color: #6b8cff; background: #26304a; color: #fff;
+    box-shadow: 0 0 0 1px #6b8cff inset;
+  }
+
+  .ctrl { display: flex; flex-direction: column; gap: 6px; }
+  .ctrl label { display: flex; justify-content: space-between; font-size: 12px; color: #9aa3b2; }
+  .ctrl label b { color: #e7e9ee; font-variant-numeric: tabular-nums; font-weight: 600; }
+  input[type=range] { width: 100%; accent-color: #6b8cff; height: 22px; }
+
+  .toggles { display: flex; gap: 10px; flex-wrap: wrap; }
+  .toggle {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12px; color: #cdd3dd; cursor: pointer;
+    padding: 7px 11px; border-radius: 9px; border: 1px solid #2c323d; background: #1e232b;
+    user-select: none;
+  }
+  .toggle input { accent-color: #6b8cff; width: 15px; height: 15px; }
+
+  /* ─── «Экран» телефона ─── */
+  .device {
+    position: relative;
+    width: 100%;
+    max-width: 390px;
+    aspect-ratio: 390 / 780;
+    border-radius: 26px;
+    overflow: hidden;
+    background: var(--scene-bg);
+    color: var(--scene-fg);
+    box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 0 1px #2c323d;
+    isolation: isolate;
+    transition: background .4s ease;
+  }
+
+  /* Плавающий фон: слой пятен */
+  .bg {
+    position: absolute; inset: 0; z-index: 0;
+    opacity: var(--intensity);
+    transition: opacity .3s ease;
+    pointer-events: none;
+  }
+  .blob {
+    position: absolute;
+    width: var(--blob); height: var(--blob);
+    border-radius: 50%;
+    filter: blur(var(--soft));
+    will-change: transform;
+    mix-blend-mode: var(--blend);
+  }
+  .b1 { background: radial-gradient(circle at 50% 50%, var(--c1), transparent 68%); top: -14%; left: -18%; animation: drift1 var(--dur1) ease-in-out infinite; }
+  .b2 { background: radial-gradient(circle at 50% 50%, var(--c2), transparent 68%); top: 28%; right: -22%; animation: drift2 var(--dur2) ease-in-out infinite; }
+  .b3 { background: radial-gradient(circle at 50% 50%, var(--c3), transparent 68%); bottom: -16%; left: 8%; animation: drift3 var(--dur3) ease-in-out infinite; }
+
+  @keyframes drift1 { 0%,100%{ transform: translate(0,0) scale(1);} 33%{ transform: translate(38%,22%) scale(1.18);} 66%{ transform: translate(14%,46%) scale(.92);} }
+  @keyframes drift2 { 0%,100%{ transform: translate(0,0) scale(1);} 33%{ transform: translate(-34%,26%) scale(.9);} 66%{ transform: translate(-12%,-18%) scale(1.2);} }
+  @keyframes drift3 { 0%,100%{ transform: translate(0,0) scale(1);} 33%{ transform: translate(30%,-24%) scale(1.15);} 66%{ transform: translate(-18%,-8%) scale(.95);} }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blob { animation: none !important; }
+  }
+
+  /* Старая «кромка» — для сравнения */
+  .edge {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    display: none;
+    background:
+      linear-gradient(to right, color-mix(in oklab, var(--edge-c) var(--edge-i), transparent), transparent 22%),
+      linear-gradient(to left,  color-mix(in oklab, var(--edge-c) var(--edge-i), transparent), transparent 22%),
+      linear-gradient(to bottom, color-mix(in oklab, var(--edge-c) var(--edge-i), transparent), transparent 16%),
+      linear-gradient(to top,    color-mix(in oklab, var(--edge-c) var(--edge-i), transparent), transparent 18%);
+  }
+  .device[data-edge="1"] .edge { display: block; }
+
+  /* Контент поверх */
+  .screen { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; padding: 14px 14px 0; }
+  .topbar { display: flex; justify-content: space-between; margin-bottom: 14px; }
+  .chip { width: 38px; height: 38px; border-radius: 50%; background: color-mix(in oklab, var(--scene-fg) 10%, transparent); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--scene-fg); }
+  .hero { display: flex; align-items: flex-end; gap: 13px; margin-bottom: 16px; }
+  .cover {
+    width: 74px; height: 74px; border-radius: 15px; flex-shrink: 0;
+    background: linear-gradient(140deg, var(--accent-dynamic), color-mix(in oklab, var(--accent-dynamic) 40%, #000));
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-dynamic) 55%, transparent), 0 10px 30px color-mix(in oklab, var(--accent-dynamic) 45%, transparent);
+  }
+  .eyebrow { font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: color-mix(in oklab, var(--scene-fg) 55%, transparent); margin-bottom: 3px; }
+  .title { font-size: 24px; font-weight: 800; line-height: 1.05; letter-spacing: -.01em; }
+  .artist { font-size: 12px; color: color-mix(in oklab, var(--scene-fg) 60%, transparent); margin-top: 3px; }
+
+  .cta {
+    background: color-mix(in oklab, var(--scene-fg) 6%, transparent);
+    border: 1px solid color-mix(in oklab, var(--scene-fg) 12%, transparent);
+    border-radius: 16px; padding: 12px; margin-bottom: 14px;
+    display: flex; flex-direction: column; gap: 9px; backdrop-filter: blur(3px);
+  }
+  .play { background: #1db954; color: #fff; font-weight: 700; font-size: 13px; text-align: center; padding: 11px; border-radius: 999px; }
+  .spot { font-size: 12px; text-align: center; color: color-mix(in oklab, var(--scene-fg) 60%, transparent); border: 1px solid color-mix(in oklab, var(--scene-fg) 14%, transparent); padding: 8px; border-radius: 999px; }
+
+  .tabs { display: flex; gap: 6px; background: color-mix(in oklab, var(--scene-fg) 7%, transparent); padding: 4px; border-radius: 999px; margin-bottom: 16px; }
+  .tabs span { flex: 1; text-align: center; font-size: 12px; font-weight: 600; padding: 8px; border-radius: 999px; color: color-mix(in oklab, var(--scene-fg) 55%, transparent); }
+  .tabs span.on { background: var(--primary); color: var(--primary-fg); }
+
+  .lyrics { display: flex; flex-direction: column; gap: 13px; }
+  .lyrics p { font-size: 14px; font-weight: 500; line-height: 1.35; }
+  .lyrics p:nth-child(n+3) { color: color-mix(in oklab, var(--scene-fg) 52%, transparent); }
+
+  .foot { font-size: 11px; color: #6b7480; text-align: center; max-width: 420px; line-height: 1.5; }
+</style>
+
+<div class="panel">
+  <h1>Живой фон · TuneScript</h1>
+  <p class="hint">Цветные пятна из палитры темы медленно дрейфуют под экраном. Переключай темы и крути ползунки — что понравится, вошью в приложение.</p>
+  <div class="themes" id="themes">
+    <button data-t="morning" aria-pressed="false">Утро</button>
+    <button data-t="day" aria-pressed="true">День</button>
+    <button data-t="sunset" aria-pressed="false">Закат</button>
+    <button data-t="night" aria-pressed="false">Ночь</button>
+  </div>
+  <div class="ctrl">
+    <label>Интенсивность <b id="vI">55%</b></label>
+    <input type="range" id="rI" min="10" max="95" value="55">
+  </div>
+  <div class="ctrl">
+    <label>Скорость движения <b id="vS">норма</b></label>
+    <input type="range" id="rS" min="0" max="100" value="50">
+  </div>
+  <div class="ctrl">
+    <label>Размер пятен <b id="vB">75%</b></label>
+    <input type="range" id="rB" min="45" max="120" value="75">
+  </div>
+  <div class="toggles">
+    <label class="toggle"><input type="checkbox" id="cEdge"> Старая «кромка» (для сравнения)</label>
+    <label class="toggle"><input type="checkbox" id="cBlend"> Свечение (screen-блендинг)</label>
+  </div>
+</div>
+
+<div class="device" id="device" data-edge="0">
+  <div class="bg">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+  <div class="edge"></div>
+  <div class="screen">
+    <div class="topbar"><div class="chip">‹</div><div class="chip">♡</div></div>
+    <div class="hero">
+      <div class="cover"></div>
+      <div>
+        <div class="eyebrow">● Трек</div>
+        <div class="title">Клуб</div>
+        <div class="artist">Крип-а-Крип · Большой Глебан</div>
+      </div>
+    </div>
+    <div class="cta">
+      <div class="play">► Слушать в браузере</div>
+      <div class="spot">Открыть в Spotify</div>
+    </div>
+    <div class="tabs"><span class="on">Текст</span><span>Разбор</span><span>Перевод</span></div>
+    <div class="lyrics">
+      <p>Мы не базарим о вирусных трендах,</p>
+      <p>машинах или сомнительных темках</p>
+      <p>Нам интересны публичные люди,</p>
+      <p>что прячут под масками спинные гребни</p>
+      <p>Мой кореш — спец по тарелкам, он</p>
+    </div>
+  </div>
+</div>
+
+<p class="foot">Это песочница для оценки приёма — не настоящее приложение. Фон использует реальные цвета 4 тем TuneScript. Цвет «обложки» здесь условный.</p>
+
+<script>
+  const THEMES = {
+    morning: { bg:"oklch(0.965 0.010 240)", fg:"oklch(0.24 0.020 250)", primary:"oklch(0.50 0.130 250)", primaryFg:"#fff", accent:"oklch(0.50 0.060 240)", c1:"oklch(0.62 0.130 250)", c2:"oklch(0.66 0.120 210)", c3:"oklch(0.60 0.150 20)", edge:"oklch(0.50 0.060 240)", edgeI:"16%", dark:false },
+    day:     { bg:"oklch(0.975 0.012 85)",  fg:"oklch(0.22 0.018 60)",  primary:"oklch(0.55 0.145 55)",  primaryFg:"#fff", accent:"oklch(0.55 0.070 85)",  c1:"oklch(0.68 0.150 55)",  c2:"oklch(0.72 0.130 120)", c3:"oklch(0.64 0.170 25)", edge:"oklch(0.55 0.070 85)",  edgeI:"16%", dark:false },
+    sunset:  { bg:"oklch(0.30 0.035 45)",   fg:"oklch(0.975 0.008 60)", primary:"oklch(0.80 0.150 65)",  primaryFg:"#241203", accent:"oklch(0.80 0.100 45)", c1:"oklch(0.72 0.170 40)",  c2:"oklch(0.68 0.160 20)",  c3:"oklch(0.62 0.150 320)", edge:"oklch(0.80 0.100 45)", edgeI:"18%", dark:true },
+    night:   { bg:"oklch(0.235 0.030 265)", fg:"oklch(0.965 0.006 265)", primary:"oklch(0.78 0.120 255)", primaryFg:"#0a0f1e", accent:"oklch(0.76 0.100 265)", c1:"oklch(0.70 0.140 265)", c2:"oklch(0.66 0.150 300)", c3:"oklch(0.68 0.140 210)", edge:"oklch(0.76 0.100 265)", edgeI:"18%", dark:true },
+  };
+
+  const device = document.getElementById("device");
+  const root = document.documentElement;
+
+  function applyTheme(name) {
+    const t = THEMES[name];
+    const s = device.style;
+    s.setProperty("--scene-bg", t.bg);
+    s.setProperty("--scene-fg", t.fg);
+    s.setProperty("--primary", t.primary);
+    s.setProperty("--primary-fg", t.primaryFg);
+    s.setProperty("--accent-dynamic", t.accent);
+    s.setProperty("--c1", t.c1);
+    s.setProperty("--c2", t.c2);
+    s.setProperty("--c3", t.c3);
+    s.setProperty("--edge-c", t.edge);
+    s.setProperty("--edge-i", t.edgeI);
+    s.setProperty("--blend", blendOn && t.dark ? "screen" : "normal");
+    document.querySelectorAll("#themes button").forEach(b =>
+      b.setAttribute("aria-pressed", String(b.dataset.t === name)));
+    current = name;
+  }
+
+  let current = "day";
+  let blendOn = false;
+
+  document.getElementById("themes").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    applyTheme(b.dataset.t);
+  });
+
+  const rI = document.getElementById("rI"), vI = document.getElementById("vI");
+  rI.addEventListener("input", () => { device.style.setProperty("--intensity", rI.value/100); vI.textContent = rI.value + "%"; });
+
+  const rS = document.getElementById("rS"), vS = document.getElementById("vS");
+  function applySpeed() {
+    // 0 = медленно (60с), 100 = живо (16с)
+    const v = +rS.value;
+    const base = 60 - (v/100)*44;
+    device.style.setProperty("--dur1", base.toFixed(1) + "s");
+    device.style.setProperty("--dur2", (base*1.28).toFixed(1) + "s");
+    device.style.setProperty("--dur3", (base*0.86).toFixed(1) + "s");
+    vS.textContent = v < 30 ? "медленно" : v > 70 ? "живо" : "норма";
+  }
+  rS.addEventListener("input", applySpeed);
+
+  const rB = document.getElementById("rB"), vB = document.getElementById("vB");
+  function applyBlob() {
+    const v = +rB.value;
+    device.style.setProperty("--blob", v + "%");
+    device.style.setProperty("--soft", Math.round(v*0.6) + "px");
+    vB.textContent = v + "%";
+  }
+  rB.addEventListener("input", applyBlob);
+
+  document.getElementById("cEdge").addEventListener("change", e =>
+    device.setAttribute("data-edge", e.target.checked ? "1" : "0"));
+  document.getElementById("cBlend").addEventListener("change", e => {
+    blendOn = e.target.checked; applyTheme(current);
+  });
+
+  // init
+  device.style.setProperty("--intensity", 0.55);
+  applySpeed(); applyBlob(); applyTheme("day");
+</script>
