@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Томер — Независимый разработчик в Израиле (v2)</title>
+  <meta name="description" content="Без агентства — один человек на проекте. Сайты, системы под процесс, Telegram-боты с ИИ и автоматизации для малого бизнеса в Израиле.">
+
+  <!-- Google Fonts: Geologica (variable), Heebo (Hebrew), JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geologica:wght,SHRP@300..800,0..100&family=Heebo:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Libraries: GSAP + ScrollTrigger, Lenis, Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Early RTL detection before first paint -->
+  <script>
+    (function() {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get('lang') === 'he') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'he');
+      }
+    })();
+  </script>
+
+  <style>
+    /* ==========================================================================
+       VARIABLES & DESIGN TOKENS
+       ========================================================================== */
+    :root {
+      --bg-dark: #16150F;
+      --bg-surface: #1E1D17;
+      --bg-card: #24221B;
+      --border-subtle: rgba(236, 232, 223, 0.09);
+      --border-light: rgba(236, 232, 223, 0.18);
+      
+      --text-main: #ECE8DF;
+      --text-muted: #9C978B;
+      --text-dim: #6B675E;
+
+      --accent: #F2B544;
+      --accent-glow: rgba(242, 181, 68, 0.28);
+      --accent-dim: rgba(242, 181, 68, 0.12);
+
+      --font-main: 'Geologica', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-he: 'Heebo', sans-serif;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      
+      --hero-wght: 800;
+    }
+
+    [dir="rtl"] {
+      --font-main: 'Heebo', 'Geologica', sans-serif;
+    }
+
+    [dir="rtl"] .pin-spacer {
+      left: auto !important;
+      right: 0 !important;
+      inset-inline-start: 0 !important;
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      overflow-x: hidden;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Film Grain Overlay */
+    .grain-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.045;
+    }
+
+    /* Subtle Radial Vignette */
+    .vignette-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9998;
+      background: radial-gradient(circle at center, transparent 35%, rgba(10, 9, 6, 0.7) 100%);
+    }
+
+    /* Links & Buttons */
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s var(--ease-out);
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: inherit;
+    }
+
+    /* Typography Scale */
+    h1, h2, h3, h4 {
+      font-weight: 700;
+      line-height: 1.12;
+      text-wrap: balance;
+    }
+
+    .mono-tag {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      letter-spacing: -0.02em;
+      color: var(--text-muted);
+    }
+
+    /* Layout Container */
+    .container {
+      width: 100%;
+      max-width: 1360px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 4vw, 3rem);
+    }
+
+    /* ==========================================================================
+       HEADER / NAVIGATION
+       ========================================================================== */
+    .site-header {
+      position: fixed;
+      inset-inline: 0;
+      top: 0;
+      z-index: 100;
+      padding-block: 1.15rem;
+      transition: background-color 0.3s var(--ease-out), padding-block 0.3s var(--ease-out);
+    }
+
+    .site-header.scrolled {
+      background-color: rgba(22, 21, 15, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-block: 0.85rem;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .brand-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.75rem, 2vw, 2rem);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      position: relative;
+      padding-block: 0.25rem;
+    }
+
+    .nav-link:hover {
+      color: var(--text-main);
+    }
+
+    /* Hero Variant Switcher (1 / 2) */
+    .hero-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      background: rgba(36, 34, 27, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      color: var(--text-dim);
+    }
+
+    .hero-switcher-label {
+      color: var(--text-muted);
+      margin-inline-end: 0.15rem;
+    }
+
+    .hero-switch-btn {
+      color: var(--text-dim);
+      padding: 0.1rem 0.35rem;
+      border-radius: 2px;
+      transition: color 0.2s, background-color 0.2s;
+    }
+
+    .hero-switch-btn.active {
+      color: var(--accent);
+      background: rgba(242, 181, 68, 0.15);
+      font-weight: 600;
+    }
+
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      padding: 0.2rem 0.45rem;
+      background: rgba(30, 29, 23, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      backdrop-filter: blur(8px);
+      flex-shrink: 0;
+    }
+
+    .lang-btn {
+      color: var(--text-dim);
+      padding: 0.15rem 0.35rem;
+      border-radius: 2px;
+      transition: color 0.2s, background-color 0.2s;
+    }
+
+    .lang-btn.active {
+      color: var(--text-main);
+      background: var(--bg-card);
+      font-weight: 600;
+    }
+
+    .header-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--bg-dark);
+      background-color: var(--accent);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+      flex-shrink: 0;
+    }
+
+    .header-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    /* ==========================================================================
+       HERO SECTION (2.5D WEBGL + PIN SCROLL ZOOM)
+       ========================================================================== */
+    .hero-pin-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+    }
+
+    .hero-section {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-dark);
+    }
+
+    /* Media Container */
+    .hero-media-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      transform-origin: center center;
+      will-change: transform;
+    }
+
+    .hero-fallback-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: opacity 0.6s var(--ease-out);
+    }
+
+    .hero-webgl-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      opacity: 0;
+      transition: opacity 0.8s var(--ease-out);
+    }
+
+    /* Lamp Light */
+    .hero-lamp-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: soft-light;
+      background: radial-gradient(circle 650px at var(--lamp-x, 50%) var(--lamp-y, 50%), rgba(242, 181, 68, 0.55) 0%, rgba(242, 181, 68, 0.15) 40%, transparent 75%);
+      opacity: 0.95;
+      z-index: 3;
+    }
+
+    /* Contrast-enhancing Gradient Dimmer */
+    .hero-dimmer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(22, 21, 15, 0.35) 0%, rgba(22, 21, 15, 0.68) 50%, rgba(22, 21, 15, 0.94) 100%);
+      opacity: 0.82;
+      z-index: 4;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    /* Hero Text & Controls */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1120px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 4vw, 3rem);
+      padding-top: clamp(2rem, 5vw, 4rem);
+    }
+
+    .hero-tag-wrap {
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      background: rgba(22, 21, 15, 0.75);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-tag-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+    }
+
+    /* 3-Line Masked Title */
+    .hero-title {
+      font-size: clamp(2rem, 5.8vw, 4.75rem);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      margin-bottom: 1.75rem;
+      color: var(--text-main);
+      font-variation-settings: 'wght' var(--hero-wght, 800), 'SHRP' 0;
+      transition: font-variation-settings 0.5s var(--ease-out);
+    }
+
+    .title-line-mask {
+      overflow: hidden;
+      display: block;
+      padding-bottom: 0.12em;
+    }
+
+    .title-line-inner {
+      display: block;
+      will-change: transform;
+    }
+
+    /* Lead Text */
+    .hero-lead-mask {
+      overflow: hidden;
+      margin-bottom: 2.25rem;
+    }
+
+    .hero-lead {
+      font-size: clamp(1.025rem, 1.55vw, 1.25rem);
+      line-height: 1.55;
+      color: var(--text-muted);
+      max-width: 620px;
+    }
+
+    /* Hero Buttons */
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--bg-dark);
+      background-color: var(--accent);
+      padding: 0.875rem 1.75rem;
+      border-radius: 4px;
+      transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out), background-color 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-main);
+      padding: 0.875rem 1.25rem;
+      border-bottom: 1px solid var(--border-light);
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ==========================================================================
+       SECTION: ЧТО УЖЕ РАБОТАЕТ (PROJECTS / SYSTEMS)
+       ========================================================================== */
+    .systems-section {
+      position: relative;
+      background-color: var(--bg-dark);
+      padding-block: clamp(5rem, 10vw, 8rem);
+      z-index: 20;
+    }
+
+    .section-header-wrap {
+      margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 3.8vw, 3.25rem);
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      color: var(--text-main);
+    }
+
+    .section-lead {
+      font-size: clamp(1rem, 1.35vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 680px;
+      line-height: 1.6;
+    }
+
+    /* Desktop Pinned Horizontal Scroll */
+    .horizontal-scroll-pin {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .horizontal-track {
+      display: flex;
+      gap: clamp(2rem, 3.5vw, 4rem);
+      padding-inline: clamp(1.5rem, 6vw, 5rem);
+      will-change: transform;
+      width: max-content;
+    }
+
+    /* Project Work Card */
+    .work-item {
+      flex: 0 0 clamp(320px, 32vw, 480px);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: clamp(1.75rem, 2.5vw, 2.75rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 380px;
+      transition: border-color 0.3s var(--ease-out);
+    }
+
+    .work-item:hover {
+      border-color: var(--border-light);
+    }
+
+    .work-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+
+    .work-index {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--accent);
+    }
+
+    .work-metric {
+      text-align: end;
+    }
+
+    .metric-number {
+      font-family: var(--font-mono);
+      font-size: clamp(1.75rem, 2.2vw, 2.5rem);
+      font-weight: 600;
+      line-height: 1;
+      color: var(--text-main);
+      display: block;
+    }
+
+    .metric-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 0.25rem;
+      display: block;
+    }
+
+    .work-title {
+      font-size: clamp(1.25rem, 1.6vw, 1.65rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      color: var(--text-main);
+    }
+
+    .work-desc {
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Factual Russian Tags in Cards */
+    .work-meta-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      list-style: none;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .work-meta-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      padding: 0.2rem 0.5rem;
+      background: var(--bg-card);
+      border-radius: 3px;
+    }
+
+    /* Systems Footer Note */
+    .systems-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .systems-footer-text {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      line-height: 1.6;
+    }
+
+    .all-works-link {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 0.15rem;
+      transition: border-color 0.2s;
+    }
+
+    .all-works-link:hover {
+      border-color: var(--accent);
+    }
+
+    /* ==========================================================================
+       SECTION: УСЛУГИ (EDITORIAL SERVICES LIST WITH V2 IMAGES)
+       ========================================================================== */
+    .services-section {
+      position: relative;
+      background-color: var(--bg-dark);
+      padding-block: clamp(5rem, 10vw, 8rem);
+      z-index: 21;
+    }
+
+    .services-list {
+      list-style: none;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 3rem;
+    }
+
+    .service-row {
+      position: relative;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-block: clamp(1.75rem, 3.5vw, 3rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+      cursor: pointer;
+      transition: opacity 0.3s var(--ease-out);
+    }
+
+    .service-left {
+      display: flex;
+      align-items: baseline;
+      gap: clamp(1.5rem, 3vw, 3.5rem);
+    }
+
+    .service-num {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      color: var(--text-dim);
+    }
+
+    .service-name {
+      font-size: clamp(1.5rem, 3.2vw, 3rem);
+      letter-spacing: -0.03em;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: color 0.2s;
+    }
+
+    .service-row:hover .service-name {
+      color: var(--accent);
+    }
+
+    .service-desc {
+      font-size: clamp(0.875rem, 1.2vw, 1.05rem);
+      color: var(--text-muted);
+      max-width: 440px;
+      text-align: end;
+      line-height: 1.55;
+    }
+
+    /* Floating Image on Hover (Desktop) */
+    .services-hover-floater {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 270px;
+      height: 270px;
+      pointer-events: none;
+      z-index: 80;
+      overflow: hidden;
+      border-radius: 6px;
+      border: 1px solid var(--border-light);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.9);
+      will-change: transform, opacity;
+      display: none;
+    }
+
+    .services-hover-floater img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Mobile Accordion Inline Image */
+    .service-mobile-img {
+      display: none;
+      width: 100%;
+      max-width: 320px;
+      border-radius: 4px;
+      margin-top: 1rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* ==========================================================================
+       SECTION: ЧЕГО Я НЕ ДЕЛАЮ (STICKY SCROLL STRIKETHROUGH)
+       ========================================================================== */
+    .not-doing-section {
+      position: relative;
+      background-color: var(--bg-dark);
+      padding-block: clamp(5rem, 10vw, 8rem);
+      z-index: 22;
+    }
+
+    .pairs-container {
+      margin-top: clamp(3rem, 6vw, 5rem);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(3rem, 5vw, 4.5rem);
+    }
+
+    .pair-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 5vw, 4.5rem);
+      align-items: baseline;
+      padding-bottom: clamp(2.5rem, 4vw, 3.5rem);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: opacity 0.3s;
+    }
+
+    .no-side {
+      position: relative;
+    }
+
+    .no-text-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .no-text {
+      font-size: clamp(1.25rem, 2vw, 1.85rem);
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      line-height: 1.35;
+      transition: opacity 0.4s var(--ease-out);
+    }
+
+    .no-text.struck {
+      opacity: 0.38;
+    }
+
+    /* Hand-drawn Strikethrough SVG Line */
+    .strike-svg {
+      position: absolute;
+      inset-inline-start: 0;
+      top: 50%;
+      width: 100%;
+      height: 24px;
+      transform: translateY(-50%);
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .strike-path {
+      stroke: var(--accent);
+      stroke-width: 3;
+      stroke-linecap: round;
+      fill: none;
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      will-change: stroke-dashoffset;
+    }
+
+    .yes-side {
+      font-size: clamp(1rem, 1.35vw, 1.2rem);
+      line-height: 1.6;
+      color: var(--text-muted);
+      opacity: 0.2;
+      transform: translateY(10px);
+      transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+    }
+
+    .yes-side.active {
+      opacity: 1;
+      transform: translateY(0);
+      color: var(--text-main);
+    }
+
+    .yes-arrow {
+      color: var(--accent);
+      margin-inline-end: 0.5rem;
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       SECTION: СВЯЗАТЬСЯ (CONTACT)
+       ========================================================================== */
+    .contact-section {
+      position: relative;
+      background-color: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      padding-block: clamp(5rem, 10vw, 8rem);
+      z-index: 23;
+    }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(3rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .contact-info .section-title {
+      margin-bottom: 1.25rem;
+    }
+
+    .contact-info .section-lead {
+      margin-bottom: 2.5rem;
+    }
+
+    .direct-whatsapp-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 1.75rem;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .direct-whatsapp-card:hover {
+      border-color: var(--accent);
+    }
+
+    .direct-wa-sub {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .direct-wa-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .direct-wa-title svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--accent);
+    }
+
+    /* Form Fields with Underline Focus Effect */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 2.25rem;
+    }
+
+    .form-group {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-light);
+      padding-block: 0.65rem;
+      font-family: inherit;
+      font-size: 1.125rem;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input::placeholder {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    .input-highlight {
+      position: absolute;
+      bottom: 0;
+      inset-inline-start: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s var(--ease-out);
+    }
+
+    .form-input:focus + .input-highlight {
+      width: 100%;
+    }
+
+    /* Submit Button with Simulated Draw Checkmark */
+    .submit-btn {
+      align-self: flex-start;
+      margin-top: 1rem;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      min-width: 160px;
+      height: 52px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--bg-dark);
+      background-color: var(--accent);
+      border-radius: 4px;
+      transition: background-color 0.3s, transform 0.2s;
+      overflow: hidden;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 18px var(--accent-glow);
+    }
+
+    .btn-text {
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn-check-svg {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      stroke: var(--bg-dark);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 40;
+      stroke-dashoffset: 40;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .submit-btn.success {
+      background-color: #34D399;
+    }
+
+    .submit-btn.success .btn-text {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    .submit-btn.success .btn-check-svg {
+      opacity: 1;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.4s ease 0.1s;
+    }
+
+    /* ==========================================================================
+       FOOTER
+       ========================================================================== */
+    .site-footer {
+      background-color: var(--bg-dark);
+      border-top: 1px solid var(--border-subtle);
+      padding-block: 2.25rem;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--text-dim);
+    }
+
+    /* ==========================================================================
+       RESPONSIVE ADAPTATIONS (<768px & 390px mobile)
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .contact-layout {
+        grid-template-columns: 1fr;
+        gap: 3.5rem;
+      }
+      .pair-block {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 767px) {
+      html, body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 100%;
+        padding-inline: 1rem;
+      }
+
+      .header-inner {
+        gap: 0.5rem;
+      }
+
+      .brand-name {
+        font-size: 1.125rem;
+      }
+
+      .header-nav {
+        gap: 0.4rem;
+      }
+
+      .hero-switcher-label {
+        display: none;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .header-cta span {
+        display: none;
+      }
+
+      .header-cta {
+        padding: 0.45rem;
+        border-radius: 50%;
+      }
+      
+      .hero-pin-wrapper {
+        min-height: 560px;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .hero-content {
+        padding-top: 3.5rem;
+        padding-inline: 1.25rem;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .hero-title {
+        font-size: clamp(1.75rem, 7.5vw, 2.25rem);
+        line-height: 1.15;
+        margin-bottom: 1.25rem;
+        max-width: 100%;
+      }
+
+      .hero-lead {
+        font-size: 0.975rem;
+        line-height: 1.5;
+        margin-bottom: 1.75rem;
+        max-width: 100%;
+      }
+
+      .hero-actions {
+        gap: 0.875rem;
+        width: 100%;
+      }
+
+      .btn-primary {
+        width: 100%;
+        padding-block: 0.85rem;
+      }
+
+      .btn-secondary {
+        width: 100%;
+        justify-content: center;
+        border-bottom: none;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: 4px;
+      }
+
+      /* Disable Horizontal Pinned Scroll on Mobile */
+      .horizontal-scroll-pin {
+        height: auto;
+        overflow: visible;
+        display: block;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .horizontal-track {
+        display: flex;
+        flex-direction: column;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-inline: 0;
+        gap: 1.5rem;
+      }
+
+      .work-item {
+        flex: 1 1 auto;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        min-height: auto;
+        clip-path: inset(0 0 0 0);
+      }
+
+      /* Services Accordion on Mobile */
+      .service-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        width: 100%;
+      }
+
+      .service-desc {
+        text-align: start;
+        max-width: 100%;
+      }
+
+      .service-mobile-img {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .services-hover-floater {
+        display: none !important;
+      }
+
+      .no-text-wrap {
+        max-width: 100%;
+      }
+
+      .no-text {
+        max-width: 100%;
+        text-wrap: pretty;
+      }
+
+      .yes-side {
+        max-width: 100%;
+      }
+
+      .direct-whatsapp-card {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SVG Film Grain Overlay -->
+  <svg class="grain-overlay" xmlns="http://www.w3.org/2000/svg">
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+  </svg>
+
+  <!-- Radial Vignette -->
+  <div class="vignette-overlay" aria-hidden="true"></div>
+
+  <!-- ==========================================================================
+       SITE HEADER
+       ========================================================================== -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a href="#" class="brand-name">
+        <span class="brand-dot"></span>
+        <span id="brandLabel">Томер</span>
+      </a>
+
+      <nav class="header-nav">
+        <ul class="nav-links">
+          <li><a href="#works" class="nav-link" id="navWorks">Работы</a></li>
+          <li><a href="#services" class="nav-link" id="navServices">Услуги</a></li>
+          <li><a href="#about" class="nav-link" id="navAbout">Обо мне</a></li>
+        </ul>
+
+        <!-- Hero Variant Switcher (1: Original / 2: Night Shift) -->
+        <div class="hero-switcher">
+          <span class="hero-switcher-label">hero:</span>
+          <button class="hero-switch-btn active" data-hero="1" title="Верстак мастера">1</button>
+          <span>/</span>
+          <button class="hero-switch-btn" data-hero="2" title="Ночная стойка">2</button>
+        </div>
+
+        <!-- Language Switcher: RU / HE / EN -->
+        <div class="lang-switcher">
+          <button class="lang-btn active" data-lang="ru">RU</button>
+          <span>·</span>
+          <button class="lang-btn" data-lang="he">HE</button>
+          <span>·</span>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+
+        <a href="https://wa.me/972500000000" target="_blank" rel="noopener" class="header-cta" id="headerCta" aria-label="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-5.46-4.45-9.92-9.91-9.92z"/></svg>
+          <span id="headerCtaText">WhatsApp</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         HERO SECTION (2.5D WebGL Depth Map + Scroll Zoom-Through)
+         ========================================================================== -->
+    <div class="hero-pin-wrapper" id="heroPinWrapper">
+      <section class="hero-section" id="hero">
+        <!-- Media Container: Fallback Image + Three.js WebGL Canvas -->
+        <div class="hero-media-container" id="heroMediaContainer">
+          <img src="assets/hero.webp" class="hero-fallback-img" id="heroFallbackImg" alt="Натюрморт на верстаке мастера">
+          <canvas class="hero-webgl-canvas" id="heroCanvas"></canvas>
+          <div class="hero-lamp-layer" id="heroLamp"></div>
+          <div class="hero-dimmer" id="heroDimmer"></div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="hero-content" id="heroContent">
+          <div class="hero-tag-wrap">
+            <div class="hero-tag">
+              <span class="hero-tag-dot"></span>
+              <span class="mono-tag" id="heroTag">Независимый разработчик · Израиль</span>
+            </div>
+          </div>
+
+          <!-- 3-Line Masked Reveal Title -->
+          <h1 class="hero-title" id="heroTitle">
+            <span class="title-line-mask"><span class="title-line-inner" id="titleLine1">Без агентства.</span></span>
+            <span class="title-line-mask"><span class="title-line-inner" id="titleLine2">Один на проекте.</span></span>
+            <span class="title-line-mask"><span class="title-line-inner" id="titleLine3">Цена в пятницу.</span></span>
+          </h1>
+
+          <div class="hero-lead-mask">
+            <p class="hero-lead" id="heroLead">
+              Пишешь в WhatsApp — смотрю твой Instagram и Google-карточку сам, в пятницу присылаю цену и сроки. Отвечаю до 4 часов, вс–чт.
+            </p>
+          </div>
+
+          <div class="hero-actions" id="heroActions">
+            <a href="https://wa.me/972500000000" target="_blank" rel="noopener" class="btn-primary" id="heroBtnPrimary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.92z"/></svg>
+              <span id="heroBtnPrimaryText">Написать в WhatsApp</span>
+            </a>
+            <a href="#services" class="btn-secondary" id="heroBtnSecondary">Как я работаю</a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==========================================================================
+         SECTION: ЧТО УЖЕ РАБОТАЕТ (Horizontal Pinned Scroll)
+         ========================================================================== -->
+    <section class="systems-section" id="works">
+      <div class="container">
+        <div class="section-header-wrap">
+          <h2 class="section-title">Системы, которыми пользуются каждый день.</h2>
+          <p class="section-lead">
+            Не макеты. Две системы стоят внутри работающих компаний, боты живут у своих владельцев, почтовый агент разбирает ящик по расписанию.
+          </p>
+        </div>
+      </div>
+
+      <!-- Horizontal Pinned Container -->
+      <div class="horizontal-scroll-pin" id="horizontalPin">
+        <div class="horizontal-track" id="horizontalTrack">
+          
+          <!-- Item 1 -->
+          <article class="work-item">
+            <div class="work-top">
+              <span class="work-index">01</span>
+              <div class="work-metric">
+                <span class="metric-number" data-target="12">12</span>
+                <span class="metric-label">учётных записей</span>
+              </div>
+            </div>
+            <div>
+              <h3 class="work-title">Склад мебельной мастерской</h3>
+              <p class="work-desc">
+                Заказы, карта склада с паллетами, статусы сборки, ввод по фото. 12 учётных записей: кладовщик, сборщики, начальник.
+              </p>
+            </div>
+            <ul class="work-meta-list">
+              <li class="work-meta-tag">карта паллет</li>
+              <li class="work-meta-tag">ввод по фото</li>
+              <li class="work-meta-tag">12 аккаунтов</li>
+            </ul>
+          </article>
+
+          <!-- Item 2 -->
+          <article class="work-item">
+            <div class="work-top">
+              <span class="work-index">02</span>
+              <div class="work-metric">
+                <span class="metric-number" data-target="3">3</span>
+                <span class="metric-label">филиала · 4 роли</span>
+              </div>
+            </div>
+            <div>
+              <h3 class="work-title">Смены для сети кафе-мороженого</h3>
+              <p class="work-desc">
+                3 филиала, 4 роли. Сотрудник отмечает, когда может, владелец собирает расписание и отправляет его в WhatsApp одним нажатием.
+              </p>
+            </div>
+            <ul class="work-meta-list">
+              <li class="work-meta-tag">3 филиала</li>
+              <li class="work-meta-tag">4 роли</li>
+              <li class="work-meta-tag">расписание в WhatsApp</li>
+            </ul>
+          </article>
+
+          <!-- Item 3 -->
+          <article class="work-item">
+            <div class="work-top">
+              <span class="work-index">03</span>
+              <div class="work-metric">
+                <span class="metric-number" data-target="3">3</span>
+                <span class="metric-label">языка</span>
+              </div>
+            </div>
+            <div>
+              <h3 class="work-title">Нутри — Telegram-бот</h3>
+              <p class="work-desc">
+                Еда текстом, голосом или фото → калории и БЖУ, дневник, советы. Три языка.
+              </p>
+            </div>
+            <ul class="work-meta-list">
+              <li class="work-meta-tag">голос и фото</li>
+              <li class="work-meta-tag">калории и БЖУ</li>
+              <li class="work-meta-tag">3 языка</li>
+            </ul>
+          </article>
+
+          <!-- Item 4 -->
+          <article class="work-item">
+            <div class="work-top">
+              <span class="work-index">04</span>
+              <div class="work-metric">
+                <span class="metric-number" data-target="100" data-suffix="+">100+</span>
+                <span class="metric-label">прогонов подряд</span>
+              </div>
+            </div>
+            <div>
+              <h3 class="work-title">Почтовый агент</h3>
+              <p class="work-desc">
+                Читает входящие на иврите и английском, раскладывает счета и договоры по папкам Google Диска, ведёт реестр. 100+ прогонов подряд.
+              </p>
+            </div>
+            <ul class="work-meta-list">
+              <li class="work-meta-tag">иврит и английский</li>
+              <li class="work-meta-tag">Google Диск</li>
+              <li class="work-meta-tag">100+ прогонов</li>
+            </ul>
+          </article>
+
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="systems-footer">
+          <p class="systems-footer-text">
+            Нужна такая же система или автоматизация рутины — соберу под твой процесс. Не конструктор: свой код, работает как отдельный сервис и меняется, когда бизнесу понадобится.
+          </p>
+          <a href="#contact" class="all-works-link">Все работы →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+       SECTION: УСЛУГИ (EDITORIAL SERVICES LIST WITH V2 IMAGES)
+       ========================================================================== -->
+    <section class="services-section" id="services">
+      <div class="container">
+        <h2 class="section-title">Услуги</h2>
+        
+        <ul class="services-list" id="servicesList">
+          
+          <!-- Service 1: Site -->
+          <li class="service-row" data-img="assets/v2/site.webp">
+            <div class="service-left">
+              <span class="service-num">01</span>
+              <span class="service-name">Сайт</span>
+            </div>
+            <p class="service-desc">
+              Лендинг или многостраничный, три языка, иврит основной.
+            </p>
+            <img src="assets/v2/site.webp" class="service-mobile-img" alt="Сайт" loading="lazy">
+          </li>
+
+          <!-- Service 2: System -->
+          <li class="service-row" data-img="assets/v2/system.webp">
+            <div class="service-left">
+              <span class="service-num">02</span>
+              <span class="service-name">Система под процесс</span>
+            </div>
+            <p class="service-desc">
+              Роли и права, ставится на телефон, ввод голосом и фото.
+            </p>
+            <img src="assets/v2/system.webp" class="service-mobile-img" alt="Система под процесс" loading="lazy">
+          </li>
+
+          <!-- Service 3: Bot -->
+          <li class="service-row" data-img="assets/v2/bot.webp">
+            <div class="service-left">
+              <span class="service-num">03</span>
+              <span class="service-name">Бот с ИИ</span>
+            </div>
+            <p class="service-desc">
+              Учёт голосом или фото прямо в мессенджере.
+            </p>
+            <img src="assets/v2/bot.webp" class="service-mobile-img" alt="Бот с ИИ" loading="lazy">
+          </li>
+
+          <!-- Service 4: Automation -->
+          <li class="service-row" data-img="assets/v2/automation.webp">
+            <div class="service-left">
+              <span class="service-num">04</span>
+              <span class="service-name">Автоматизация</span>
+            </div>
+            <p class="service-desc">
+              Рутина, которая делается сама: документы, отчёты, уведомления.
+            </p>
+            <img src="assets/v2/automation.webp" class="service-mobile-img" alt="Автоматизация" loading="lazy">
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Floating Image Preview on Hover (Desktop) -->
+      <div class="services-hover-floater" id="servicesFloater">
+        <img src="assets/v2/site.webp" id="floaterImg" alt="Предмет">
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+       SECTION: ЧЕГО Я НЕ ДЕЛАЮ (STICKY SCROLL STRIKETHROUGH)
+       ========================================================================== -->
+    <section class="not-doing-section" id="about">
+      <div class="container">
+        <h2 class="section-title">Всё, за что агентство берёт деньги, у меня просто отсутствует.</h2>
+
+        <div class="pairs-container" id="pairsContainer">
+          
+          <!-- Pair 1 -->
+          <div class="pair-block">
+            <div class="no-side">
+              <div class="no-text-wrap">
+                <p class="no-text">Нет дискавери-фазы за деньги.</p>
+                <svg class="strike-svg" viewBox="0 0 450 20" preserveAspectRatio="none">
+                  <path class="strike-path" d="M 4 12 Q 110 5, 220 11 T 446 8" />
+                </svg>
+              </div>
+            </div>
+            <div class="yes-side">
+              <span class="yes-arrow">→</span>Я сам, бесплатно, захожу в твой Instagram и Google-карточку до того, как назову цену.
+            </div>
+          </div>
+
+          <!-- Pair 2 -->
+          <div class="pair-block">
+            <div class="no-side">
+              <div class="no-text-wrap">
+                <p class="no-text">Нет аккаунт-менеджера.</p>
+                <svg class="strike-svg" viewBox="0 0 350 20" preserveAspectRatio="none">
+                  <path class="strike-path" d="M 4 11 Q 90 6, 180 12 T 346 9" />
+                </svg>
+              </div>
+            </div>
+            <div class="yes-side">
+              <span class="yes-arrow">→</span>Пишешь напрямую мне в WhatsApp. Отвечаю до 4 часов, вс–чт.
+            </div>
+          </div>
+
+          <!-- Pair 3 -->
+          <div class="pair-block">
+            <div class="no-side">
+              <div class="no-text-wrap">
+                <p class="no-text">Нет джуна, который пишет твой код.</p>
+                <svg class="strike-svg" viewBox="0 0 480 20" preserveAspectRatio="none">
+                  <path class="strike-path" d="M 4 10 Q 120 15, 240 9 T 476 11" />
+                </svg>
+              </div>
+            </div>
+            <div class="yes-side">
+              <span class="yes-arrow">→</span>Кто продал — тот и пишет код. Один человек.
+            </div>
+          </div>
+
+          <!-- Pair 4 -->
+          <div class="pair-block">
+            <div class="no-side">
+              <div class="no-text-wrap">
+                <p class="no-text">Нет ретейнера «на всякий случай».</p>
+                <svg class="strike-svg" viewBox="0 0 440 20" preserveAspectRatio="none">
+                  <path class="strike-path" d="M 4 12 Q 110 7, 220 12 T 436 10" />
+                </svg>
+              </div>
+            </div>
+            <div class="yes-side">
+              <span class="yes-arrow">→</span>30 дней правок включены. Дальше — по факту, а не по подписке.
+            </div>
+          </div>
+
+          <!-- Pair 5 -->
+          <div class="pair-block">
+            <div class="no-side">
+              <div class="no-text-wrap">
+                <p class="no-text">Нет презентаций в Figma вместо рабочего продукта.</p>
+                <svg class="strike-svg" viewBox="0 0 540 20" preserveAspectRatio="none">
+                  <path class="strike-path" d="M 4 11 Q 140 6, 270 12 T 536 9" />
+                </svg>
+              </div>
+            </div>
+            <div class="yes-side">
+              <span class="yes-arrow">→</span>К концу первой недели у тебя в браузере открывается рабочий прототип.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+       SECTION: СВЯЗАТЬСЯ (CONTACT)
+       ========================================================================== -->
+    <section class="contact-section" id="contact">
+      <div class="container contact-layout">
+        
+        <div class="contact-info">
+          <h2 class="section-title">Давай поговорим прямо сейчас.</h2>
+          <p class="section-lead">
+            Отвечаю в течение 4 часов в рабочее время. Никакого меню, никакого менеджера — я читаю сообщение и отвечаю.
+          </p>
+
+          <a href="https://wa.me/972500000000" target="_blank" rel="noopener" class="direct-whatsapp-card">
+            <span class="direct-wa-sub">Или сразу:</span>
+            <span class="direct-wa-title">
+              <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.92z"/></svg>
+              WhatsApp
+            </span>
+          </a>
+        </div>
+
+        <!-- Contact Form with Underline Lighting -->
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <label class="form-label" for="userName">Имя</label>
+            <input type="text" id="userName" class="form-input" placeholder="Как к тебе обращаться?" required>
+            <span class="input-highlight"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="userContact">Куда написать обратно</label>
+            <input type="text" id="userContact" class="form-input" placeholder="WhatsApp / Email / Telegram" required>
+            <span class="input-highlight"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="userGoal">Одной строкой — что нужно?</label>
+            <input type="text" id="userGoal" class="form-input" placeholder="Например: лендинг для барбершопа в Рамат-Гане" required>
+            <span class="input-highlight"></span>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span class="btn-text">Отправить</span>
+            <svg class="btn-check-svg" viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </button>
+        </form>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 Томер · Независимый разработчик · Израиль · Без агентств и посредников</p>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       INTERACTIVE SCRIPTS: THREE.JS 2.5D SHADER, GSAP, SCROLLTRIGGER, RTL
+       ========================================================================== */
+  -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Lenis Smooth Scrolling
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let lenis = null;
+
+      if (!prefersReduced && typeof Lenis !== 'undefined') {
+        lenis = new Lenis({
+          duration: 1.15,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
+          touchMultiplier: 1.5,
+        });
+
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+          lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+      }
+
+      // 2. Header Scroll Background
+      const siteHeader = document.getElementById('siteHeader');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 40) {
+          siteHeader.classList.add('scrolled');
+        } else {
+          siteHeader.classList.remove('scrolled');
+        }
+      }, { passive: true });
+
+      // ======================================================================
+      // 3. WebGL 2.5D Depth Map Parallax Shader for Hero (Supports Hero 1 and 2)
+      // ======================================================================
+      const canvas = document.getElementById('heroCanvas');
+      const fallbackImg = document.getElementById('heroFallbackImg');
+      const heroSection = document.getElementById('hero');
+      let renderer, scene, camera, material, mesh;
+
+      const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
+      let isWebGlReady = false;
+
+      const heroAssets = {
+        1: {
+          color: 'assets/hero.webp',
+          depth: 'assets/hero-depth.webp'
+        },
+        2: {
+          color: 'assets/v2/hero-alt.webp',
+          depth: 'assets/v2/hero-alt-depth.webp'
+        }
+      };
+
+      let currentHeroId = 1;
+
+      if (!prefersReduced && canvas && typeof THREE !== 'undefined') {
+        try {
+          scene = new THREE.Scene();
+          camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+          renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: "high-performance" });
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+          const textureLoader = new THREE.TextureLoader();
+
+          function loadHeroTextures(heroId) {
+            const cfg = heroAssets[heroId] || heroAssets[1];
+            currentHeroId = heroId;
+
+            fallbackImg.src = cfg.color;
+            
+            textureLoader.load(cfg.color, (colorTex) => {
+              textureLoader.load(cfg.depth, (depthTex) => {
+                colorTex.minFilter = THREE.LinearFilter;
+                colorTex.generateMipmaps = false;
+                depthTex.minFilter = THREE.LinearFilter;
+                depthTex.generateMipmaps = false;
+
+                if (material) {
+                  material.uniforms.uTexture.value = colorTex;
+                  material.uniforms.uDepth.value = depthTex;
+                } else {
+                  const uniforms = {
+                    uTexture: { value: colorTex },
+                    uDepth: { value: depthTex },
+                    uMouse: { value: new THREE.Vector2(0, 0) },
+                    uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                    uImageResolution: { value: new THREE.Vector2(1376, 768) }
+                  };
+
+                  const vertexShader = `
+                    varying vec2 vUv;
+                    void main() {
+                      vUv = uv;
+                      gl_Position = vec4(position, 1.0);
+                    }
+                  `;
+
+                  const fragmentShader = `
+                    uniform sampler2D uTexture;
+                    uniform sampler2D uDepth;
+                    uniform vec2 uMouse;
+                    uniform vec2 uResolution;
+                    uniform vec2 uImageResolution;
+                    varying vec2 vUv;
+
+                    vec2 getCoverUv(vec2 uv, vec2 screenRes, vec2 imgRes) {
+                      float screenRatio = screenRes.x / screenRes.y;
+                      float imgRatio = imgRes.x / imgRes.y;
+                      vec2 ratio = vec2(
+                        min(screenRatio / imgRatio, 1.0),
+                        min(imgRatio / screenRatio, 1.0)
+                      );
+                      return vec2(
+                        uv.x * ratio.x + (1.0 - ratio.x) * 0.5,
+                        uv.y * ratio.y + (1.0 - ratio.y) * 0.5
+                      );
+                    }
+
+                    void main() {
+                      vec2 coverUv = getCoverUv(vUv, uResolution, uImageResolution);
+                      float depth = texture2D(uDepth, coverUv).r;
+                      vec2 displacement = uMouse * depth * 0.015;
+                      vec4 color = texture2D(uTexture, coverUv + displacement);
+                      gl_FragColor = color;
+                    }
+                  `;
+
+                  material = new THREE.ShaderMaterial({
+                    vertexShader,
+                    fragmentShader,
+                    uniforms,
+                    depthTest: false,
+                    depthWrite: false
+                  });
+
+                  mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
+                  scene.add(mesh);
+                }
+
+                resizeCanvas();
+                isWebGlReady = true;
+                canvas.style.opacity = '1';
+                fallbackImg.style.opacity = '0';
+              });
+            });
+          }
+
+          loadHeroTextures(1);
+
+          function resizeCanvas() {
+            if (!renderer) return;
+            const width = heroSection.clientWidth;
+            const height = heroSection.clientHeight;
+            renderer.setSize(width, height);
+            if (material) {
+              material.uniforms.uResolution.value.set(width, height);
+            }
+          }
+
+          window.addEventListener('resize', resizeCanvas, { passive: true });
+
+          // Mouse move interaction for depth parallax
+          window.addEventListener('mousemove', (e) => {
+            pointer.targetX = (e.clientX / window.innerWidth) - 0.5;
+            pointer.targetY = (e.clientY / window.innerHeight) - 0.5;
+          }, { passive: true });
+
+          // Mobile subtle scroll drift
+          window.addEventListener('scroll', () => {
+            if (window.innerWidth < 768) {
+              pointer.targetY = (window.scrollY / window.innerHeight) * 0.2;
+            }
+          }, { passive: true });
+
+          function animateWebGL() {
+            requestAnimationFrame(animateWebGL);
+            if (isWebGlReady && material) {
+              pointer.x += (pointer.targetX - pointer.x) * 0.08;
+              pointer.y += (pointer.targetY - pointer.y) * 0.08;
+              material.uniforms.uMouse.value.set(pointer.x, -pointer.y);
+              renderer.render(scene, camera);
+            }
+          }
+          animateWebGL();
+
+          // Expose switchHero function
+          window.switchHero = (id) => {
+            loadHeroTextures(id);
+          };
+
+        } catch (err) {
+          console.warn("WebGL fallback to native image:", err);
+        }
+      }
+
+      // 4. Hero Lamp Glow Following Cursor with Inertia
+      const heroLamp = document.getElementById('heroLamp');
+      let lampX = 50, lampY = 50, targetLampX = 50, targetLampY = 50;
+
+      window.addEventListener('mousemove', (e) => {
+        targetLampX = (e.clientX / window.innerWidth) * 100;
+        targetLampY = (e.clientY / window.innerHeight) * 100;
+      }, { passive: true });
+
+      function updateLamp() {
+        lampX += (targetLampX - lampX) * 0.06;
+        lampY += (targetLampY - lampY) * 0.06;
+        heroLamp.style.setProperty('--lamp-x', `${lampX}%`);
+        heroLamp.style.setProperty('--lamp-y', `${lampY}%`);
+        requestAnimationFrame(updateLamp);
+      }
+      updateLamp();
+
+      // ======================================================================
+      // 5. GSAP ANIMATIONS: MASKED LINE REVEAL & ZOOM-THROUGH
+      // ======================================================================
+      if (!prefersReduced && typeof gsap !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Intro Timeline
+        const heroTl = gsap.timeline({ defaults: { ease: "expo.out" } });
+
+        heroTl.from(".title-line-inner", {
+          yPercent: 110,
+          stagger: 0.12,
+          duration: 1.1,
+          delay: 0.1
+        });
+
+        heroTl.fromTo(":root", 
+          { "--hero-wght": 300 },
+          { "--hero-wght": 800, duration: 1.2, ease: "power3.out" },
+          "-=1.0"
+        );
+
+        heroTl.from("#heroLead", {
+          opacity: 0,
+          y: 20,
+          duration: 0.8,
+          ease: "power3.out"
+        }, "-=0.6");
+
+        heroTl.from("#heroActions", {
+          opacity: 0,
+          y: 20,
+          duration: 0.8,
+          ease: "power3.out"
+        }, "-=0.6");
+
+        // Hero -> Systems Zoom-Through Scroll Transition
+        ScrollTrigger.create({
+          trigger: "#heroPinWrapper",
+          start: "top top",
+          end: "+=110%",
+          pin: true,
+          scrub: 1,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const scale = 1 + progress * 0.35;
+            document.getElementById('heroMediaContainer').style.transform = `scale(${scale})`;
+            document.getElementById('heroDimmer').style.opacity = 0.82 + progress * 0.18;
+            
+            const heroContent = document.getElementById('heroContent');
+            heroContent.style.opacity = Math.max(0, 1 - progress * 2.2);
+            heroContent.style.transform = `translateY(${-progress * 100}px)`;
+          }
+        });
+
+        // ====================================================================
+        // 6. Horizontal Pinned Scroll for Works (Desktop >= 768px)
+        // ====================================================================
+        const isDesktop = window.innerWidth >= 768;
+        const isRtl = document.documentElement.getAttribute('dir') === 'rtl';
+
+        if (isDesktop) {
+          const track = document.getElementById('horizontalTrack');
+          const totalShift = track.scrollWidth - window.innerWidth + 120;
+          const shiftValue = isRtl ? totalShift : -totalShift;
+
+          gsap.to(track, {
+            x: shiftValue,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#horizontalPin",
+              pin: true,
+              scrub: 1,
+              start: "top top",
+              end: () => `+=${track.scrollWidth}`
+            }
+          });
+        } else {
+          // Mobile clip-path reveal for cards
+          gsap.utils.toArray('.work-item').forEach((item) => {
+            gsap.fromTo(item, 
+              { clipPath: "inset(0 0 100% 0)" },
+              {
+                clipPath: "inset(0 0 0% 0)",
+                duration: 0.85,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: item,
+                  start: "top 85%"
+                }
+              }
+            );
+          });
+        }
+
+        // Metrics Number Count-up Animation
+        const metricNumbers = document.querySelectorAll('.metric-number');
+        metricNumbers.forEach((el) => {
+          const target = parseInt(el.getAttribute('data-target'), 10);
+          const suffix = el.getAttribute('data-suffix') || '';
+          
+          ScrollTrigger.create({
+            trigger: el,
+            start: "top 90%",
+            once: true,
+            onEnter: () => {
+              gsap.fromTo({ val: 0 }, 
+                { val: 0 },
+                {
+                  val: target,
+                  duration: 1.6,
+                  ease: "power2.out",
+                  onUpdate: function() {
+                    el.textContent = Math.floor(this.targets()[0].val) + suffix;
+                  }
+                }
+              );
+            }
+          });
+        });
+
+        // ====================================================================
+        // 7. Services Floating Image Preview on Hover
+        // ====================================================================
+        const serviceRows = document.querySelectorAll('.service-row');
+        const floater = document.getElementById('servicesFloater');
+        const floaterImg = document.getElementById('floaterImg');
+
+        let mouseX = 0, mouseY = 0, floaterX = 0, floaterY = 0;
+        let lastMouseX = 0, velX = 0;
+
+        window.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          velX = mouseX - lastMouseX;
+          lastMouseX = mouseX;
+        }, { passive: true });
+
+        function updateFloater() {
+          floaterX += (mouseX - floaterX) * 0.12;
+          floaterY += (mouseY - floaterY) * 0.12;
+          const rot = Math.max(-12, Math.min(12, velX * 0.45));
+
+          floater.style.transform = `translate3d(${floaterX + 24}px, ${floaterY - 130}px, 0) rotate(${rot}deg)`;
+          requestAnimationFrame(updateFloater);
+        }
+        updateFloater();
+
+        serviceRows.forEach((row) => {
+          row.addEventListener('mouseenter', () => {
+            if (window.innerWidth >= 768) {
+              const imgUrl = row.getAttribute('data-img');
+              floaterImg.src = imgUrl;
+              floater.style.display = 'block';
+              gsap.to(floater, { opacity: 1, scale: 1, duration: 0.25, overwrite: "auto" });
+
+              serviceRows.forEach(r => {
+                if (r !== row) r.style.opacity = '0.35';
+              });
+            }
+          });
+
+          row.addEventListener('mouseleave', () => {
+            if (window.innerWidth >= 768) {
+              gsap.to(floater, { opacity: 0, scale: 0.9, duration: 0.2, onComplete: () => { floater.style.display = 'none'; } });
+              serviceRows.forEach(r => r.style.opacity = '1');
+            }
+          });
+        });
+
+        // ====================================================================
+        // 8. "Чего я не делаю" Scroll-Scrubbed Strikethrough
+        // ====================================================================
+        const pairBlocks = document.querySelectorAll('.pair-block');
+
+        pairBlocks.forEach((pair) => {
+          const strikePath = pair.querySelector('.strike-path');
+          const noText = pair.querySelector('.no-text');
+          const yesSide = pair.querySelector('.yes-side');
+
+          ScrollTrigger.create({
+            trigger: pair,
+            start: "top 72%",
+            end: "bottom 45%",
+            scrub: 0.5,
+            onUpdate: (self) => {
+              const progress = self.progress;
+              const offset = 600 - (progress * 600);
+              strikePath.style.strokeDashoffset = offset;
+
+              if (progress > 0.4) {
+                noText.classList.add('struck');
+                yesSide.classList.add('active');
+              } else {
+                noText.classList.remove('struck');
+                yesSide.classList.remove('active');
+              }
+            }
+          });
+        });
+
+      }
+
+      // ======================================================================
+      // 9. Contact Form Simulation (Checkmark Draw Animation)
+      // ======================================================================
+      const contactForm = document.getElementById('contactForm');
+      const submitBtn = document.getElementById('submitBtn');
+
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitBtn.classList.add('success');
+        setTimeout(() => {
+          contactForm.reset();
+        }, 1200);
+        setTimeout(() => {
+          submitBtn.classList.remove('success');
+        }, 4000);
+      });
+
+      // ======================================================================
+      // 10. Hero Switcher (1 / 2)
+      // ======================================================================
+      const heroSwitchBtns = document.querySelectorAll('.hero-switch-btn');
+      heroSwitchBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          heroSwitchBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const id = parseInt(btn.getAttribute('data-hero'), 10);
+          if (window.switchHero) {
+            window.switchHero(id);
+          } else {
+            const cfg = heroAssets[id] || heroAssets[1];
+            fallbackImg.src = cfg.color;
+          }
+        });
+      });
+
+      // ======================================================================
+      // 11. Language Switcher (RU / HE / EN) with RTL Support
+      // ======================================================================
+      const langButtons = document.querySelectorAll('.lang-btn');
+
+      const i18n = {
+        ru: {
+          dir: 'ltr',
+          tag: 'Независимый разработчик · Израиль',
+          title1: 'Без агентства.',
+          title2: 'Один на проекте.',
+          title3: 'Цена в пятницу.',
+          lead: 'Пишешь в WhatsApp — смотрю твой Instagram и Google-карточку сам, в пятницу присылаю цену и сроки. Отвечаю до 4 часов, вс–чт.',
+          btnPrimary: 'Написать в WhatsApp',
+          btnSecondary: 'Как я работаю'
+        },
+        he: {
+          dir: 'rtl',
+          tag: 'מפתח עצמאי · ישראל',
+          title1: 'בלי סוכנות.',
+          title2: 'אחד מולך.',
+          title3: 'מחיר ביום שישי.',
+          lead: 'כותב בוואטסאפ, מסתכל על העסק שלך, ובימי שישי שולח מחיר ולוח זמנים. עונה תוך 4 שעות, ראשון-חמישי.',
+          btnPrimary: 'וואטסאפ',
+          btnSecondary: 'איך אני עובד'
+        },
+        en: {
+          dir: 'ltr',
+          tag: 'Independent Developer · Israel',
+          title1: 'No agency.',
+          title2: 'One person on project.',
+          title3: 'Price on Friday.',
+          lead: 'Message me on WhatsApp — I check your Instagram and Google profile myself, sending quote and timeline on Friday. Reply within 4 hours, Sun–Thu.',
+          btnPrimary: 'Message on WhatsApp',
+          btnSecondary: 'How I work'
+        }
+      };
+
+      function setLanguage(lang) {
+        langButtons.forEach(b => {
+          if (b.getAttribute('data-lang') === lang) {
+            b.classList.add('active');
+          } else {
+            b.classList.remove('active');
+          }
+        });
+
+        const data = i18n[lang];
+        if (!data) return;
+
+        document.documentElement.setAttribute('dir', data.dir);
+        document.documentElement.setAttribute('lang', lang);
+
+        document.getElementById('heroTag').textContent = data.tag;
+        document.getElementById('titleLine1').textContent = data.title1;
+        document.getElementById('titleLine2').textContent = data.title2;
+        document.getElementById('titleLine3').textContent = data.title3;
+        document.getElementById('heroLead').textContent = data.lead;
+        document.getElementById('heroBtnPrimaryText').textContent = data.btnPrimary;
+        document.getElementById('heroBtnSecondary').textContent = data.btnSecondary;
+
+        if (!prefersReduced && typeof ScrollTrigger !== 'undefined') {
+          ScrollTrigger.refresh();
+        }
+      }
+
+      langButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const lang = btn.getAttribute('data-lang');
+          setLanguage(lang);
+        });
+      });
+
+      // Check URL query param e.g. ?lang=he
+      const urlParams = new URLSearchParams(window.location.search);
+      const qLang = urlParams.get('lang');
+      if (qLang && i18n[qLang]) {
+        setLanguage(qLang);
+      }
+
+    });
+  </script>
+</body>
+</html>
