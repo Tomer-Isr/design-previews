@@ -548,16 +548,6 @@
       align-items: start;
     }
 
-    /* Checkerboard (Tomer 29.09): even groups put the tile on the other side */
-    .stand-row:nth-child(even) {
-      grid-template-columns: 1fr 280px;
-    }
-    .stand-row:nth-child(even) .stand-lead {
-      order: 2;
-      align-items: flex-end;
-      text-align: end;
-    }
-
     .stand-row:first-child {
       border-top: none;
       padding-top: 0;
@@ -985,15 +975,6 @@
       .stand-lead-tile {
         width: 64px;
         height: 64px;
-      }
-      /* phone: keep the lead above the cards; even groups put the tile at the far edge */
-      .stand-row:nth-child(even) .stand-lead {
-        order: 0;
-        flex-direction: row-reverse;
-        justify-content: space-between;
-        align-items: center;
-        text-align: start;
-        width: 100%;
       }
       .stand-lead-title {
         font-size: 24px;
