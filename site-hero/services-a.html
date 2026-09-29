@@ -4,7 +4,7 @@
   <meta name="robots" content="noindex">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>iukhvidov · независимый разработчик · Услуги (Направление А: «Плитки сверху»)</title>
+  <title>iukhvidov · независимый разработчик</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Hebrew:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1095,7 +1095,8 @@
     .service-tile-img {
       object-fit: contain;
       display: block;
-      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4));
+      /* graphite tile on a graphite band: lift it a little so it reads (Ada 29.09) */
+      filter: brightness(1.45) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5));
       transform: translate(2px, 3px) rotate(2.5deg);
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: transform;
@@ -1131,8 +1132,8 @@
     }
 
     .service-tile-btn-a {
-      background-color: #242927;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background-color: #323936;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: var(--radius-card);
       padding: 24px 20px;
       display: flex;
@@ -1141,7 +1142,7 @@
       text-align: center;
       gap: 16px;
       cursor: pointer;
-      opacity: 0.55;
+      opacity: 0.8;
       transform: translateY(0);
       transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
                   transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
@@ -1152,14 +1153,14 @@
     }
 
     .service-tile-btn-a:hover {
-      opacity: 0.85;
+      opacity: 0.95;
       border-color: rgba(163, 155, 214, 0.35);
       background-color: #282F2C;
     }
 
     .service-tile-btn-a.is-active {
       opacity: 1;
-      background-color: #2E3633;
+      background-color: #3E4743;
       border-color: var(--color-lilac-light);
       transform: translateY(-4px);
       box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.5);
@@ -2365,7 +2366,7 @@
             <div class="demo-top-bar">
               <span class="demo-title-tag" id="demoActivePill" data-i18n="services_tab_sites">Сайт</span>
               <p class="demo-lead-desc" id="demoLeadText" data-i18n="services_desc_sites">
-                «Лендинг или многостраничный, три языка, иврит основной.»
+                Лендинг или многостраничный, три языка, иврит основной.
               </p>
             </div>
 
@@ -2576,10 +2577,10 @@
         services_tag_systems: '02 · учёт',
         services_tag_bots: '03 · мессенджер',
         services_tag_automation: '04 · рутина',
-        services_desc_sites: '«Лендинг или многостраничный, три языка, иврит основной.»',
-        services_desc_systems: '«Роли и права, ставится на телефон, ввод голосом и фото.»',
-        services_desc_bots: '«Учёт голосом или фото прямо в мессенджере.»',
-        services_desc_automation: '«Рутина, которая делается сама: почта, счета, документы, отчёты.»',
+        services_desc_sites: 'Лендинг или многостраничный, три языка, иврит основной.',
+        services_desc_systems: 'Роли и права, ставится на телефон, ввод голосом и фото.',
+        services_desc_bots: 'Учёт голосом или фото прямо в мессенджере.',
+        services_desc_automation: 'Рутина, которая делается сама: почта, счета, документы, отчёты.',
         services_demo_sites_caption: 'демо · салон выдуман',
         services_demo_systems_caption: 'демо · данные выдуманы, хранятся только в твоём браузере',
         services_coming_soon: 'живое демо появится',
@@ -2662,10 +2663,10 @@
         services_tag_systems: '02 · ניהול',
         services_tag_bots: '03 · מסנג׳ר',
         services_tag_automation: '04 · שגרה',
-        services_desc_sites: '«דף נחיתה או אתר מרובה עמודים, 3 שפות, עברית כשפה ראשית.»',
-        services_desc_systems: '«תפקידים והרשאות, מותקן בנייד, הזנה בקול ובתמונה.»',
-        services_desc_bots: '«ניהול בקול או בתמונה ישירות בתוך המסנג׳ר.»',
-        services_desc_automation: '«שגרה שעובדת מעצמה: מיילים, חשבוניות, מסמכים ודוחות.»',
+        services_desc_sites: 'דף נחיתה או אתר מרובה עמודים, 3 שפות, עברית כשפה ראשית.',
+        services_desc_systems: 'תפקידים והרשאות, מותקן בנייד, הזנה בקול ובתמונה.',
+        services_desc_bots: 'ניהול בקול או בתמונה ישירות בתוך המסנג׳ר.',
+        services_desc_automation: 'שגרה שעובדת מעצמה: מיילים, חשבוניות, מסמכים ודוחות.',
         services_demo_sites_caption: 'דמו · מספרה לדוגמה',
         services_demo_systems_caption: 'דמו · נתונים לדוגמה, נשמרים בדפדפן שלך בלבד',
         services_coming_soon: 'דמו חי יעלה בקרוב',
@@ -2748,10 +2749,10 @@
         services_tag_systems: '02 · ledger',
         services_tag_bots: '03 · messenger',
         services_tag_automation: '04 · autopilot',
-        services_desc_sites: '«Landing page or multi-page site, three languages, Hebrew as primary.»',
-        services_desc_systems: '«Roles and permissions, installs on mobile, voice and photo input.»',
-        services_desc_bots: '«Tracking via voice or photo directly in your messenger.»',
-        services_desc_automation: '«Routine tasks on autopilot: email, invoices, documents, reports.»',
+        services_desc_sites: 'Landing page or multi-page site, three languages, Hebrew as primary.',
+        services_desc_systems: 'Roles and permissions, installs on mobile, voice and photo input.',
+        services_desc_bots: 'Tracking via voice or photo directly in your messenger.',
+        services_desc_automation: 'Routine tasks on autopilot: email, invoices, documents, reports.',
         services_demo_sites_caption: 'demo · fictional salon',
         services_demo_systems_caption: 'demo · fictional data, stored only in your browser',
         services_coming_soon: 'live demo coming soon',
@@ -2889,9 +2890,9 @@
       sites: {
         tag: { ru: 'Сайт', he: 'אתר', en: 'Website' },
         desc: {
-          ru: '«Лендинг или многостраничный, три языка, иврит основной.»',
-          he: '«דף נחיתה או אתר מרובה עמודים, 3 שפות, עברית כשפה ראשית.»',
-          en: '«Landing page or multi-page site, three languages, Hebrew as primary.»'
+          ru: 'Лендинг или многостраничный, три языка, иврит основной.',
+          he: 'דף נחיתה או אתר מרובה עמודים, 3 שפות, עברית כשפה ראשית.',
+          en: 'Landing page or multi-page site, three languages, Hebrew as primary.'
         },
         caption: {
           ru: 'демо · салон выдуман',
@@ -2902,9 +2903,9 @@
       systems: {
         tag: { ru: 'Система', he: 'מערכת', en: 'System' },
         desc: {
-          ru: '«Роли и права, ставится на телефон, ввод голосом и фото.»',
-          he: '«תפקידים והרשאות, מותקן בנייד, הזנה בקול ובתמונה.»',
-          en: '«Roles and permissions, installs on mobile, voice and photo input.»'
+          ru: 'Роли и права, ставится на телефон, ввод голосом и фото.',
+          he: 'תפקידים והרשאות, מותקן בנייד, הזנה בקול ובתמונה.',
+          en: 'Roles and permissions, installs on mobile, voice and photo input.'
         },
         caption: {
           ru: 'демо · данные выдуманы, хранятся только в твоём браузере',
@@ -2915,9 +2916,9 @@
       bots: {
         tag: { ru: 'Бот', he: 'בוט', en: 'Bot' },
         desc: {
-          ru: '«Учёт голосом или фото прямо в мессенджере.»',
-          he: '«ניהול בקול או בתמונה ישירות בתוך המסנג׳ר.»',
-          en: '«Tracking via voice or photo directly in your messenger.»'
+          ru: 'Учёт голосом или фото прямо в мессенджере.',
+          he: 'ניהול בקול או בתמונה ישירות בתוך המסנג׳ר.',
+          en: 'Tracking via voice or photo directly in your messenger.'
         },
         caption: {
           ru: 'демо · бот',
@@ -2928,9 +2929,9 @@
       automation: {
         tag: { ru: 'Автоматизация', he: 'אוטומציה', en: 'Automation' },
         desc: {
-          ru: '«Рутина, которая делается сама: почта, счета, документы, отчёты.»',
-          he: '«שגרה שעובדת מעצמה: מיילים, חשבוניות, מסמכים ודוחות.»',
-          en: '«Routine tasks on autopilot: email, invoices, documents, reports.»'
+          ru: 'Рутина, которая делается сама: почта, счета, документы, отчёты.',
+          he: 'שגרה שעובדת מעצמה: מיילים, חשבוניות, מסמכים ודוחות.',
+          en: 'Routine tasks on autopilot: email, invoices, documents, reports.'
         },
         caption: {
           ru: 'демо · автоматизация',
