@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta name="robots" content="noindex">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iukhvidov · независимый разработчик · Работы (Направление А: «Стол»)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Hebrew:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-paper: #F7F6F2;
+      --color-white: #FFFFFF;
+      --color-text: #1A1C1B;
+      --color-muted: #57544D;
+      --color-lines: #CFCBC1;
+      --color-graphite: #1A1C1B;
+      --color-plate: #323936;
+      --color-light-on-dark: #E6E4DE;
+      
+      /* Lilac system */
+      --color-lilac-dark: #4F4790;
+      --color-lilac-mid: #8F87C2;
+      --color-lilac-light: #A39BD6;
+      --color-lilac-soft: #E3E1F2;
+      --color-lilac-subtext: #DCD8F3;
+      
+      /* Patina & accents */
+      --color-patina: #357562;
+      --color-patina-light: #5FB39A;
+      --color-patina-outline: #9FE0CB;
+      --color-whatsapp: #25D366;
+      
+      /* Signal Yellow */
+      --color-yellow: #EBCB3E;
+      --color-yellow-hover: #DFBF35;
+      --color-yellow-soft: #F6ECC0;
+      --color-yellow-soft-text: #5E500E;
+      
+      /* Typography */
+      --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --font-hebrew: 'IBM Plex Sans Hebrew', 'IBM Plex Sans', sans-serif;
+      
+      /* Geometry */
+      --radius-btn: 5px;
+      --radius-card: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--color-paper);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body[dir="rtl"] {
+      font-family: var(--font-hebrew);
+    }
+
+    /* ==========================================================
+       HERO SCREEN WRAPPER: Exact copy from index-v6.html
+       Full width dense lilac #4F4790
+       ========================================================== */
+    .hero-screen-wrapper {
+      width: 100%;
+      background-color: var(--color-lilac-dark);
+      color: var(--color-white);
+      position: relative;
+    }
+
+    .site-header {
+      width: 100%;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(220, 216, 243, 0.22);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--color-white);
+    }
+
+    .brand svg {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+      color: var(--color-white);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--color-lilac-subtext);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover {
+      color: var(--color-white);
+    }
+
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      border-left: 1px solid rgba(220, 216, 243, 0.25);
+      padding-left: 20px;
+      color: var(--color-lilac-subtext);
+    }
+
+    body[dir="rtl"] .lang-switch {
+      border-left: none;
+      border-right: 1px solid rgba(220, 216, 243, 0.25);
+      padding-left: 0;
+      padding-right: 20px;
+    }
+
+    .lang-btn {
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: inherit;
+      color: var(--color-lilac-subtext);
+      cursor: pointer;
+      padding: 3px 6px;
+      border-radius: 3px;
+      transition: background-color 0.15s, color 0.15s;
+    }
+
+    .lang-btn:hover {
+      color: var(--color-white);
+    }
+
+    .lang-btn.active {
+      color: var(--color-white);
+      font-weight: 600;
+      background-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .hero-section {
+      width: 100%;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 68px 32px 84px 32px;
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 40px;
+      align-items: center;
+      min-height: calc(100vh - 84px);
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-lilac-subtext);
+      margin-bottom: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--color-yellow);
+      border-radius: 1px;
+    }
+
+    .hero-title {
+      font-size: clamp(38px, 4.4vw, 58px);
+      line-height: 1.14;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--color-white);
+      margin-bottom: 28px;
+    }
+
+    .hero-title .title-line {
+      display: block;
+      color: var(--color-white);
+      font-weight: 700;
+    }
+
+    .hero-title .title-accent-line {
+      display: inline-block;
+      border-bottom: 0.12em solid var(--color-yellow);
+      padding-bottom: 0.02em;
+      line-height: 1.12;
+    }
+
+    .hero-desc {
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--color-lilac-subtext);
+      max-width: 480px;
+      margin-bottom: 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      height: 48px;
+      padding: 0 24px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: var(--radius-btn);
+      transition: background-color 0.15s, transform 0.15s, border-color 0.15s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: var(--color-yellow);
+      color: var(--color-graphite);
+      border: 1px solid var(--color-yellow);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--color-yellow-hover);
+      border-color: var(--color-yellow-hover);
+      transform: translateY(-1px);
+    }
+
+    .whatsapp-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--color-white);
+      border: 1px solid rgba(220, 216, 243, 0.4);
+    }
+
+    .btn-outline:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: var(--color-white);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-lilac-subtext);
+      padding: 8px 14px;
+      background-color: rgba(0, 0, 0, 0.18);
+      border-radius: var(--radius-btn);
+      border: 1px solid rgba(220, 216, 243, 0.22);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background-color: var(--color-yellow);
+      border-radius: 50%;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .status-dot::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border: 1px solid var(--color-yellow);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: pulse 2.5s infinite ease-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      70% { transform: scale(2.2); opacity: 0; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .tiles-stage {
+      position: relative;
+      width: 100%;
+      max-width: 760px;
+      aspect-ratio: 1200 / 896;
+      user-select: none;
+    }
+
+    .tiles-img-base {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .patina-snap-overlay {
+      position: absolute;
+      top: 51.56%;
+      left: 50.67%;
+      width: 24.42%;
+      height: 32.50%;
+      background-image: url('assets/tile-patina-v5.png');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      transform-origin: 50% 50%;
+      filter: drop-shadow(0 14px 26px rgba(16, 12, 34, 0.48));
+      transform: translate(14.37%, 6.36%) rotate(21.3deg);
+      will-change: transform;
+    }
+
+    .tile-label {
+      position: absolute;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-lilac-subtext);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      line-height: 1;
+    }
+
+    .tile-label::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      border-radius: 1px;
+      background-color: rgba(220, 216, 243, 0.45);
+      transition: background-color 0.25s ease;
+    }
+
+    .tile-label-1 { top: 10.5%; left: 25.08%; }
+    .tile-label-2 { top: 10.5%; left: 50.67%; }
+    .tile-label-3 { top: 88.5%; left: 25.08%; }
+    .tile-label-4 {
+      top: 88.5%;
+      left: 50.67%;
+      opacity: 0.5;
+      transition: opacity 0.3s ease, color 0.3s ease;
+    }
+
+    .tile-label-4.active {
+      opacity: 1;
+      color: var(--color-yellow);
+    }
+
+    .tile-label-4.active::before {
+      background-color: var(--color-yellow);
+    }
+
+    .tiles-caption {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--color-lilac-subtext);
+      text-align: center;
+      margin-top: 20px;
+      user-select: none;
+      width: 100%;
+      line-height: 1.4;
+    }
+
+    /* ==========================================================
+       WORKS SECTION: DIRECTION A «СТОЛ» (Physical Studio Table)
+       Paper #F7F6F2 with top-down scenes, graphite devices & tiles
+       ========================================================== */
+    .works-section {
+      width: 100%;
+      background-color: var(--color-paper);
+      color: var(--color-text);
+      border-top: 1px solid var(--color-lines);
+      position: relative;
+    }
+
+    .works-container {
+      width: 100%;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 80px 32px 120px 32px;
+    }
+
+    /* Header & Legend */
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--color-lilac-dark);
+      border-radius: 1px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 3.2vw, 42px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--color-text);
+      margin-bottom: 18px;
+      line-height: 1.2;
+    }
+
+    .section-legend {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--color-muted);
+      padding: 14px 18px;
+      background-color: rgba(26, 28, 27, 0.035);
+      border: 1px solid var(--color-lines);
+      border-radius: 6px;
+      margin-bottom: 64px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-badge {
+      display: inline-block;
+      background-color: var(--color-yellow-soft);
+      color: var(--color-yellow-soft-text);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 2px 7px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    /* Desk Group Rows */
+    .desk-groups-list {
+      display: flex;
+      flex-direction: column;
+      gap: 88px;
+    }
+
+    .desk-group-row {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 48px;
+      align-items: center;
+      padding-bottom: 88px;
+      border-bottom: 1px solid var(--color-lines);
+    }
+
+    .desk-group-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    /* Desk Stage: Photorealistic table surface */
+    .desk-stage {
+      position: relative;
+      background-color: var(--color-paper);
+      border: 1px solid var(--color-lines);
+      border-radius: 12px;
+      padding: 40px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+      overflow: visible;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.02);
+    }
+
+    /* Subtle paper watermark texture */
+    .desk-stage::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      pointer-events: none;
+      background-image: radial-gradient(rgba(26, 28, 27, 0.04) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.5;
+    }
+
+    .desk-items-composition {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      z-index: 1;
+    }
+
+    /* Tactile Ceramic Tile on the Desk */
+    .desk-tile-anchor {
+      position: relative;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .desk-tile-img {
+      width: 116px;
+      height: 116px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 12px 24px rgba(16, 12, 34, 0.28));
+      /* Initial displaced/askew position */
+      transform: translate(8px, 6px) rotate(8.5deg);
+      transition: transform 0.55s cubic-bezier(0.2, 0.9, 0.28, 1.25);
+      will-change: transform;
+    }
+
+    .desk-tile-img.is-snapped {
+      transform: translate(0, 0) rotate(0deg);
+    }
+
+    .desk-tile-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-lilac-dark);
+      background-color: var(--color-lilac-soft);
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    /* Graphite Device Mockups (Top-down view, 0° perspective) */
+    .devices-cluster {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: nowrap;
+    }
+
+    .desk-phone {
+      position: relative;
+      width: 172px;
+      aspect-ratio: 9 / 19.5;
+      background-color: #1A1C1D;
+      border-radius: 28px;
+      padding: 7px;
+      box-shadow: 
+        0 1px 2px rgba(16, 12, 34, 0.10),
+        0 10px 24px -2px rgba(16, 12, 34, 0.22),
+        0 24px 48px -6px rgba(16, 12, 34, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+    }
+
+    .desk-phone:hover {
+      transform: translateY(-2px);
+    }
+
+    .desk-phone-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background-color: #E7E5DF; /* Exactly solid gray #E7E5DF from brief */
+      border-radius: 21px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .desk-phone-notch {
+      position: absolute;
+      top: 6px;
+      width: 44px;
+      height: 12px;
+      background-color: #0E0F10;
+      border-radius: 6px;
+      z-index: 2;
+    }
+
+    .screen-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: rgba(26, 28, 27, 0.4);
+      text-align: center;
+      padding: 0 8px;
+      line-height: 1.3;
+      user-select: none;
+    }
+
+    .device-number-tag {
+      position: absolute;
+      bottom: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--color-muted);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    /* 16:10 Laptop display for Sites */
+    .desk-display {
+      position: relative;
+      width: 254px;
+      aspect-ratio: 16 / 10;
+      background-color: #1A1C1D;
+      border-radius: 10px;
+      padding: 7px 7px 11px 7px;
+      box-shadow: 
+        0 1px 2px rgba(16, 12, 34, 0.10),
+        0 10px 24px -2px rgba(16, 12, 34, 0.22),
+        0 24px 48px -6px rgba(16, 12, 34, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+    }
+
+    .desk-display:hover {
+      transform: translateY(-2px);
+    }
+
+    .desk-display-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background-color: #E7E5DF; /* Exactly solid gray #E7E5DF */
+      border-radius: 5px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .desk-display-camera {
+      position: absolute;
+      top: 3px;
+      width: 4px;
+      height: 4px;
+      background-color: #0E0F10;
+      border-radius: 50%;
+    }
+
+    /* Desk Content: Text and Works List */
+    .desk-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .group-lead {
+      margin-bottom: 28px;
+    }
+
+    .group-lead-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-lilac-dark);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .group-lead-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--color-lilac-dark);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .works-items-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .work-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px;
+      background-color: var(--color-white);
+      border: 1px solid var(--color-lines);
+      border-radius: var(--radius-card);
+      transition: border-color 0.2s, transform 0.2s;
+      width: 100%;
+    }
+
+    .work-item:hover {
+      border-color: var(--color-lilac-mid);
+      transform: translateY(-1px);
+    }
+
+    .work-item-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .work-badge {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--color-yellow-soft);
+      color: var(--color-yellow-soft-text);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    .work-title {
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+      color: var(--color-text);
+    }
+
+    .work-desc {
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--color-muted);
+      margin-bottom: 14px;
+    }
+
+    .work-desc:last-child {
+      margin-bottom: 0;
+    }
+
+    .btn-work-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 38px;
+      padding: 0 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text);
+      background-color: var(--color-paper);
+      border: 1px solid var(--color-lines);
+      border-radius: var(--radius-btn);
+      text-decoration: none;
+      transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+      cursor: pointer;
+    }
+
+    .btn-work-action:hover {
+      background-color: var(--color-lilac-soft);
+      border-color: var(--color-lilac-mid);
+      color: var(--color-lilac-dark);
+    }
+
+    .btn-work-action svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================
+       ACCESSIBILITY & REDUCED MOTION
+       ========================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      .patina-snap-overlay {
+        transform: translate(0, 0) rotate(0deg) !important;
+        transition: none !important;
+      }
+      .desk-tile-img {
+        transform: translate(0, 0) rotate(0deg) !important;
+        transition: none !important;
+      }
+      .tile-label-4 {
+        opacity: 1 !important;
+        color: var(--color-yellow) !important;
+      }
+      .tile-label-4::before {
+        background-color: var(--color-yellow) !important;
+      }
+      .status-dot::after {
+        animation: none !important;
+      }
+      .btn, .work-item, .desk-phone, .desk-display {
+        transition: none !important;
+      }
+      html {
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ==========================================================
+       RESPONSIVENESS (MOBILE 390px)
+       ========================================================== */
+    @media (max-width: 860px) {
+      .site-header {
+        padding: 16px 20px;
+        flex-wrap: nowrap;
+        gap: 12px;
+      }
+      .nav-links {
+        display: none;
+      }
+      .lang-switch {
+        padding-left: 0;
+        border-left: none;
+        gap: 4px;
+        font-size: 11px;
+      }
+      body[dir="rtl"] .lang-switch {
+        padding-right: 0;
+        border-right: none;
+      }
+      .lang-btn {
+        padding: 2px 4px;
+      }
+      .hero-section {
+        display: flex;
+        flex-direction: column;
+        padding: 16px 20px 52px 20px;
+        gap: 24px;
+        min-height: auto;
+      }
+      .hero-visual {
+        order: 1;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto 8px auto;
+      }
+      .tile-label {
+        display: none !important;
+      }
+      .tiles-caption {
+        font-size: 11px;
+        letter-spacing: 0.03em;
+        line-height: 1.45;
+        margin-top: 12px;
+        max-width: 310px;
+      }
+      .hero-content {
+        order: 2;
+        width: 100%;
+      }
+      .eyebrow {
+        margin-bottom: 16px;
+      }
+      .hero-title {
+        font-size: 34px;
+        line-height: 1.15;
+        margin-bottom: 20px;
+      }
+      .hero-desc {
+        font-size: 16px;
+        margin-bottom: 28px;
+      }
+      .hero-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+      .btn {
+        width: 100%;
+      }
+      .status-badge {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Works section mobile */
+      .works-container {
+        padding: 48px 20px 64px 20px;
+      }
+      .section-title {
+        font-size: 28px;
+        margin-bottom: 16px;
+      }
+      .section-legend {
+        font-size: 12px;
+        gap: 8px 12px;
+        margin-bottom: 44px;
+        padding: 12px 14px;
+      }
+      .desk-groups-list {
+        gap: 60px;
+      }
+      .desk-group-row {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        padding-bottom: 60px;
+      }
+      .desk-stage {
+        padding: 28px 16px;
+        min-height: auto;
+        width: 100%;
+      }
+      .desk-items-composition {
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .desk-tile-img {
+        width: 84px;
+        height: 84px;
+      }
+      .desk-phone {
+        width: 118px;
+        border-radius: 20px;
+        padding: 5px;
+      }
+      .desk-phone-screen {
+        border-radius: 15px;
+      }
+      .desk-phone-notch {
+        width: 32px;
+        height: 9px;
+      }
+      .screen-label {
+        font-size: 9px;
+      }
+      .desk-display {
+        width: 170px;
+        border-radius: 8px;
+        padding: 5px 5px 8px 5px;
+      }
+      .group-lead-title {
+        font-size: 26px;
+      }
+      .work-title {
+        font-size: 17px;
+      }
+      .work-desc {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================
+       FIRST SCREEN: EXACT COPY FROM index-v6.html
+       ========================================================== -->
+  <div class="hero-screen-wrapper" id="heroWrapper">
+
+    <header class="site-header">
+      <a href="index-v6.html" class="brand" aria-label="iukhvidov home">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="6" y="6" width="16" height="16" rx="2.5" fill="#FFFFFF"/>
+          <rect x="26" y="6" width="16" height="16" rx="2.5" fill="#FFFFFF"/>
+          <rect x="6" y="26" width="16" height="16" rx="2.5" fill="#FFFFFF"/>
+          <rect x="28.5" y="27.5" width="16" height="16" rx="2.5" fill="none" stroke="#9FE0CB" stroke-width="3" transform="rotate(14 36.5 35.5)"/>
+        </svg>
+        <span class="brand-name">iukhvidov</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#services" data-i18n="nav_services">Услуги</a></li>
+          <li><a href="#works" data-i18n="nav_works">Работы</a></li>
+          <li><a href="#about" data-i18n="nav_about">О себе</a></li>
+          <li><a href="#contact" data-i18n="nav_contact">Связаться</a></li>
+        </ul>
+
+        <div class="lang-switch">
+          <button type="button" class="lang-btn" data-lang="he">HE</button>
+          <span>·</span>
+          <button type="button" class="lang-btn active" data-lang="ru">RU</button>
+          <span>·</span>
+          <button type="button" class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero-section" id="heroSection">
+        
+        <!-- Text Content -->
+        <div class="hero-content">
+          <div class="eyebrow" data-i18n="eyebrow">независимый разработчик · Израиль</div>
+
+          <h1 class="hero-title" id="heroHeading">
+            <span class="title-line" data-i18n="h1_line1">Без агентства.</span>
+            <span class="title-line" data-i18n="h1_line2">Один на проекте.</span>
+            <span class="title-line"><span class="title-accent-line" data-i18n="h1_line3">Цена в пятницу.</span></span>
+          </h1>
+
+          <p class="hero-desc" data-i18n="hero_desc">
+            Пишешь в WhatsApp — смотрю твой Instagram и Google-карточку сам, в пятницу присылаю цену и сроки. Отвечаю до 4 часов, вс–чт.
+          </p>
+
+          <div class="hero-actions">
+            <a href="https://wa.me/" class="btn btn-primary" target="_blank" rel="noopener">
+              <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 6.46 17.5 2 12.04 2ZM17.47 14.38C17.17 14.23 15.72 13.52 15.45 13.42C15.18 13.32 14.98 13.27 14.78 13.57C14.58 13.87 14.01 14.54 13.84 14.74C13.66 14.94 13.49 14.96 13.19 14.81C12.89 14.66 11.93 14.35 10.79 13.33C9.9 12.54 9.3 11.56 9.13 11.26C8.96 10.96 9.11 10.8 9.26 10.65C9.39 10.52 9.56 10.3 9.71 10.13C9.86 9.95 9.91 9.83 10.01 9.63C10.11 9.43 10.06 9.26 9.99 9.11C9.91 8.96 9.31 7.5 9.06 6.89C8.82 6.3 8.57 6.38 8.39 6.37H7.82C7.62 6.37 7.3 6.45 7.03 6.74C6.76 7.03 6 7.74 6 9.18C6 10.62 7.05 12.01 7.2 12.21C7.35 12.41 9.27 15.37 12.22 16.64C12.92 16.95 13.47 17.13 13.9 17.27C14.6 17.49 15.24 17.46 15.74 17.38C16.3 17.3 17.46 16.68 17.7 16C17.94 15.32 17.94 14.74 17.87 14.62C17.8 14.5 17.62 14.43 17.32 14.28L17.47 14.38Z" fill="#1A1C1B"/>
+              </svg>
+              <span data-i18n="btn_whatsapp">Написать в WhatsApp</span>
+            </a>
+
+            <a href="#works" class="btn btn-outline" data-i18n="btn_how">
+              Как я работаю
+            </a>
+          </div>
+
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            <span data-i18n="status_text">беру проекты · отвечу до 4 часов · вс–чт 09:00–19:00</span>
+          </div>
+        </div>
+
+        <!-- Right Visual: Four Debossed Tiles with Scroll Snap and Labels -->
+        <div class="hero-visual">
+          <div class="tiles-stage" id="tilesStage">
+            <img src="assets/tiles-base-v6.png" alt="Архитектурные керамические плитки: сайт, бот, система" class="tiles-img-base">
+            <div class="patina-snap-overlay" id="patinaTile" aria-label="Зелёная глазурованная плитка автоматизации"></div>
+
+            <span class="tile-label tile-label-1" data-i18n="tile_label_1">сайт</span>
+            <span class="tile-label tile-label-2" data-i18n="tile_label_2">бот</span>
+            <span class="tile-label tile-label-3" data-i18n="tile_label_3">система</span>
+            <span class="tile-label tile-label-4" id="labelPatina" data-i18n="tile_label_4">автоматизация</span>
+          </div>
+
+          <div class="tiles-caption" data-i18n="tiles_caption">
+            четыре дела · четвёртое встаёт на место
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+  </div>
+
+  <!-- ==========================================================
+       NEW WORKS BLOCK: DIRECTION A «СТОЛ»
+       Physical top-down scenes, graphite devices, snapping tiles
+       ========================================================== -->
+  <section class="works-section" id="works">
+    <div class="works-container">
+      
+      <!-- Section Header -->
+      <div class="section-eyebrow" data-i18n="sec_eyebrow">что уже работает</div>
+      <h2 class="section-title" data-i18n="sec_title">Системы, которыми пользуются каждый день</h2>
+
+      <!-- Legend Line -->
+      <div class="section-legend" aria-label="Легенда пометок">
+        <div class="legend-item">
+          <span class="legend-badge" data-i18n="legend_badge_client">у клиента</span>
+          <span data-i18n="legend_text_client">— работает в чужом бизнесе, имена заменены</span>
+        </div>
+        <span>·</span>
+        <div class="legend-item">
+          <span class="legend-badge" data-i18n="legend_badge_public">открыт всем</span>
+          <span data-i18n="legend_text_public">— мой продукт</span>
+        </div>
+        <span>·</span>
+        <div class="legend-item">
+          <span class="legend-badge" data-i18n="legend_badge_self">для себя</span>
+          <span data-i18n="legend_text_self">— работает у меня, тебе настрою</span>
+        </div>
+        <span>·</span>
+        <div class="legend-item">
+          <span class="legend-badge" data-i18n="legend_badge_demo">демо</span>
+          <span data-i18n="legend_text_demo">— выдуманный бизнес</span>
+        </div>
+      </div>
+
+      <!-- Four Groups List -->
+      <div class="desk-groups-list">
+
+        <!-- ====================================================
+             GROUP 1: СИСТЕМЫ (плитка с таблицей)
+             ==================================================== -->
+        <div class="desk-group-row" id="group-systems">
+          <!-- Physical Desk Scene -->
+          <div class="desk-stage">
+            <div class="desk-items-composition">
+              <!-- Animated Snapping Tile -->
+              <div class="desk-tile-anchor">
+                <img src="assets/works-tile-systems.png" alt="Керамическая плитка: Системы (таблица)" class="desk-tile-img js-snap-tile">
+                <span class="desk-tile-tag" data-i18n="tile_label_3">система</span>
+              </div>
+
+              <!-- Two Graphite Phones with Blank Screens (#E7E5DF, 9:19.5) -->
+              <div class="devices-cluster">
+                <!-- Phone 1: Склад -->
+                <div class="desk-phone" title="Склад мебельной мастерской">
+                  <div class="desk-phone-screen">
+                    <div class="desk-phone-notch" aria-hidden="true"></div>
+                    <span class="screen-label" data-i18n="work1_title">Склад мебельной мастерской</span>
+                  </div>
+                  <span class="device-number-tag">01</span>
+                </div>
+
+                <!-- Phone 2: Смены -->
+                <div class="desk-phone" title="Смены для сети мороженого">
+                  <div class="desk-phone-screen">
+                    <div class="desk-phone-notch" aria-hidden="true"></div>
+                    <span class="screen-label" data-i18n="work2_title">Смены для сети мороженого</span>
+                  </div>
+                  <span class="device-number-tag">02</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Column -->
+          <div class="desk-content">
+            <div class="group-lead">
+              <span class="group-lead-tag" data-i18n="grp1_tag">01 · группа</span>
+              <h3 class="group-lead-title" data-i18n="grp1_title">Системы</h3>
+            </div>
+
+            <div class="works-items-list">
+              <!-- Work 1 -->
+              <article class="work-item">
+                <div class="work-item-header">
+                  <span class="work-badge" data-i18n="badge_client">у клиента</span>
+                  <h4 class="work-title" data-i18n="work1_title">Склад мебельной мастерской</h4>
+                </div>
+                <p class="work-desc" data-i18n="work1_desc">
+                  Заказ от закупки до подписи клиента: цех, склад, выезд, монтаж. Ставится на телефон, иврит и русский.
+                </p>
+              </article>
+
+              <!-- Work 2 -->
+              <article class="work-item">
+                <div class="work-item-header">
+                  <span class="work-badge" data-i18n="badge_client">у клиента</span>
+                  <h4 class="work-title" data-i18n="work2_title">Смены для сети мороженого</h4>
+                </div>
+                <p class="work-desc" data-i18n="work2_desc">
+                  Сотрудник отмечает, когда может; владелец собирает график и отправляет его в WhatsApp одной кнопкой.
+                </p>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================
+             GROUP 2: БОТЫ (плитка с чатом)
+             ==================================================== -->
+        <div class="desk-group-row" id="group-bots">
+          <!-- Physical Desk Scene -->
+          <div class="desk-stage">
+            <div class="desk-items-composition">
+              <!-- Animated Snapping Tile -->
+              <div class="desk-tile-anchor">
+                <img src="assets/works-tile-bots.png" alt="Керамическая плитка: Боты (чат)" class="desk-tile-img js-snap-tile">
+                <span class="desk-tile-tag" data-i18n="tile_label_2">бот</span>
+              </div>
+
+              <!-- Two Graphite Phones with Blank Screens (#E7E5DF, 9:19.5) -->
+              <div class="devices-cluster">
+                <!-- Phone 3: Нутри -->
+                <div class="desk-phone" title="Нутри — дневник питания">
+                  <div class="desk-phone-screen">
+                    <div class="desk-phone-notch" aria-hidden="true"></div>
+                    <span class="screen-label" data-i18n="work3_title">Нутри — дневник питания</span>
+                  </div>
+                  <span class="device-number-tag">03</span>
+                </div>
+
+                <!-- Phone 4: Расходы -->
+                <div class="desk-phone" title="Учёт расходов на машину">
+                  <div class="desk-phone-screen">
+                    <div class="desk-phone-notch" aria-hidden="true"></div>
+                    <span class="screen-label" data-i18n="work4_title">Учёт расходов на машину</span>
+                  </div>
+                  <span class="device-number-tag">04</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Column -->
+          <div class="desk-content">
+            <div class="group-lead">
+              <span class="group-lead-tag" data-i18n="grp2_tag">02 · группа</span>
+              <h3 class="group-lead-title" data-i18n="grp2_title">Боты</h3>
+            </div>
+
+            <div class="works-items-list">
+              <!-- Work 3 -->
+              <article class="work-item">
+                <div class="work-item-header">
+                  <span class="work-badge" data-i18n="badge_public">открыт всем</span>
+                  <h4 class="work-title" data-i18n="work3_title">Нутри — дневник питания</h4>
+                </div>
+                <p class="work-desc" data-i18n="work3_desc">
+                  Еду пишешь, диктуешь или снимаешь — калории считаются сами. Прямо в Telegram.
+                </p>
+                <a href="https://t.me/" class="btn-work-action" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                  <span data-i18n="btn_open_tg">Открыть в Telegram</span>
+                </a>
+              </article>
+
+              <!-- Work 4 -->
+              <article class="work-item">
+                <div class="work-item-header">
+                  <span class="work-badge" data-i18n="badge_client">у клиента</span>
+                  <h4 class="work-title" data-i18n="work4_title">Учёт расходов на машину</h4>
+                </div>
+                <p class="work-desc" data-i18n="work4_desc">
+                  Фото чека с заправки — и строка в учёте. Бот для одного человека, закрытый.
+                </p>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================
+             GROUP 3: АВТОМАТИЗАЦИЯ (зелёная плитка со стрелками)
+             ==================================================== -->
+        <div class="desk-group-row" id="group-automation">
+          <!-- Physical Desk Scene -->
+          <div class="desk-stage">
+            <div class="desk-items-composition">
+              <!-- Animated Snapping Tile -->
+              <div class="desk-tile-anchor">
+                <img src="assets/works-tile-automation.png" alt="Зелёная плитка патины: Автоматизация (стрелки)" class="desk-tile-img js-snap-tile">
+                <span class="desk-tile-tag" data-i18n="tile_label_4">автоматизация</span>
+              </div>
+
+              <!-- Graphite Phone with Blank Screen (#E7E5DF, 9:19.5) -->
+              <div class="devices-cluster">
+                <div class="desk-phone" title="Свой ИИ-помощник под рутину">
+                  <div class="desk-phone-screen">
+                    <div class="desk-phone-notch" aria-hidden="true"></div>
+                    <span class="screen-label" data-i18n="work5_title">Свой ИИ-помощник под рутину</span>
+                  </div>
+                  <span class="device-number-tag">05</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Column -->
+          <div class="desk-content">
+            <div class="group-lead">
+              <span class="group-lead-tag" data-i18n="grp3_tag">03 · группа</span>
+              <h3 class="group-lead-title" data-i18n="grp3_title">Автоматизация</h3>
+            </div>
+
+            <div class="works-items-list">
+              <!-- Work 5 -->
+              <article class="work-item">
+                <div class="work-item-header">
+                  <span class="work-badge" data-i18n="badge_self">для себя</span>
+                  <h4 class="work-title" data-i18n="work5_title">Свой ИИ-помощник под рутину</h4>
+                </div>
+                <p class="work-desc" data-i18n="work5_desc">
+                  Сам разбирает почту, счета и документы. Работает на подписке ИИ — это настройка под тебя, а не готовая программа.
+                </p>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================
+             GROUP 4: САЙТЫ (плитка с браузером)
+             ==================================================== -->
+        <div class="desk-group-row" id="group-sites">
+          <!-- Physical Desk Scene -->
+          <div class="desk-stage">
+            <div class="desk-items-composition">
+              <!-- Animated Snapping Tile -->
+              <div class="desk-tile-anchor">
+                <img src="assets/works-tile-sites.png" alt="Керамическая плитка: Сайты (браузер)" class="desk-tile-img js-snap-tile">
+                <span class="desk-tile-tag" data-i18n="tile_label_1">сайт</span>
+              </div>
+
+              <!-- Computer Display (16:10) + Companion Phone (9:19.5) -->
+              <div class="devices-cluster">
+                <!-- Laptop Display (16:10) for 3D-визитка -->
+                <div class="desk-display" title="3D-визитка (16:10 экран)">
+                  <div class="desk-display-screen">
+                    <div class="desk-display-camera" aria-hidden="true"></div>
+                    <span class="screen-label" data-i18n="work6_title">3D-визитка</span>
+                  </div>
+                  <span class="device-number-tag">06</span>
+                </div>
+
+                <!-- Companion Phone (9:19.5) for Салон красоты -->
+                <div class="desk-phone" title="Салон красоты (мобильный экран)">
+                  <div class="desk-phone-screen">
+                    <div class="desk-phone-notch" aria-hidden="true"></div>
+                    <span class="screen-label" data-i18n="work7_title">Салон красоты</span>
+                  </div>
+                  <span class="device-number-tag">07</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Column -->
+          <div class="desk-content">
+            <div class="group-lead">
+              <span class="group-lead-tag" data-i18n="grp4_tag">04 · группа</span>
+              <h3 class="group-lead-title" data-i18n="grp4_title">Сайты</h3>
+            </div>
+
+            <div class="works-items-list">
+              <!-- Work 6 -->
+              <article class="work-item">
+                <div class="work-item-header">
+                  <span class="work-badge" data-i18n="badge_self">для себя</span>
+                  <h4 class="work-title" data-i18n="work6_title">3D-визитка</h4>
+                </div>
+                <p class="work-desc" data-i18n="work6_desc">
+                  С неё ты сюда и пришёл.
+                </p>
+                <a href="#heroWrapper" class="btn-work-action">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                  <span data-i18n="btn_open">Открыть</span>
+                </a>
+              </article>
+
+              <!-- Work 7 -->
+              <article class="work-item">
+                <div class="work-item-header">
+                  <span class="work-badge" data-i18n="badge_demo">демо</span>
+                  <h4 class="work-title" data-i18n="work7_title">Салон красоты</h4>
+                </div>
+                <p class="work-desc" data-i18n="work7_desc">
+                  Выдуманный салон: как сайт выглядит на телефоне, планшете и компьютере.
+                </p>
+              </article>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       SCRIPTS: Hero snap, Works tiles snap, and i18n switcher
+       ========================================================== -->
+  <script>
+    const i18nData = {
+      ru: {
+        dir: 'ltr',
+        nav_services: 'Услуги',
+        nav_works: 'Работы',
+        nav_about: 'О себе',
+        nav_contact: 'Связаться',
+        eyebrow: 'независимый разработчик · Израиль',
+        h1_line1: 'Без агентства.',
+        h1_line2: 'Один на проекте.',
+        h1_line3: 'Цена в пятницу.',
+        hero_desc: 'Пишешь в WhatsApp — смотрю твой Instagram и Google-карточку сам, в пятницу присылаю цену и сроки. Отвечаю до 4 часов, вс–чт.',
+        btn_whatsapp: 'Написать в WhatsApp',
+        btn_how: 'Как я работаю',
+        status_text: 'беру проекты · отвечу до 4 часов · вс–чт 09:00–19:00',
+        tile_label_1: 'сайт',
+        tile_label_2: 'бот',
+        tile_label_3: 'система',
+        tile_label_4: 'автоматизация',
+        tiles_caption: 'четыре дела · четвёртое встаёт на место',
+        sec_eyebrow: 'что уже работает',
+        sec_title: 'Системы, которыми пользуются каждый день',
+        legend_badge_client: 'у клиента',
+        legend_text_client: '— работает в чужом бизнесе, имена заменены',
+        legend_badge_public: 'открыт всем',
+        legend_text_public: '— мой продукт',
+        legend_badge_self: 'для себя',
+        legend_text_self: '— работает у меня, тебе настрою',
+        legend_badge_demo: 'демо',
+        legend_text_demo: '— выдуманный бизнес',
+        grp1_tag: '01 · группа',
+        grp1_title: 'Системы',
+        grp2_tag: '02 · группа',
+        grp2_title: 'Боты',
+        grp3_tag: '03 · группа',
+        grp3_title: 'Автоматизация',
+        grp4_tag: '04 · группа',
+        grp4_title: 'Сайты',
+        badge_client: 'у клиента',
+        badge_public: 'открыт всем',
+        badge_self: 'для себя',
+        badge_demo: 'демо',
+        work1_title: 'Склад мебельной мастерской',
+        work1_desc: 'Заказ от закупки до подписи клиента: цех, склад, выезд, монтаж. Ставится на телефон, иврит и русский.',
+        work2_title: 'Смены для сети мороженого',
+        work2_desc: 'Сотрудник отмечает, когда может; владелец собирает график и отправляет его в WhatsApp одной кнопкой.',
+        work3_title: 'Нутри — дневник питания',
+        work3_desc: 'Еду пишешь, диктуешь или снимаешь — калории считаются сами. Прямо в Telegram.',
+        btn_open_tg: 'Открыть в Telegram',
+        work4_title: 'Учёт расходов на машину',
+        work4_desc: 'Фото чека с заправки — и строка в учёте. Бот для одного человека, закрытый.',
+        work5_title: 'Свой ИИ-помощник под рутину',
+        work5_desc: 'Сам разбирает почту, счета и документы. Работает на подписке ИИ — это настройка под тебя, а не готовая программа.',
+        work6_title: '3D-визитка',
+        work6_desc: 'С неё ты сюда и пришёл.',
+        btn_open: 'Открыть',
+        work7_title: 'Салон красоты',
+        work7_desc: 'Выдуманный салон: как сайт выглядит на телефоне, планшете и компьютере.'
+      },
+      he: {
+        dir: 'rtl',
+        nav_services: 'שירותים',
+        nav_works: 'עבודות',
+        nav_about: 'אודות',
+        nav_contact: 'קשר',
+        eyebrow: 'מפתח עצמאי · ישראל',
+        h1_line1: 'בלי סוכנות.',
+        h1_line2: 'אחד מולך.',
+        h1_line3: 'מחיר ביום שישי.',
+        hero_desc: 'כותב בוואטסאפ — בודק את האינסטגרם וכרטיס הגוגל בעצמי, ביום שישי שולח מחיר ולוחות זמנים. מענה עד 4 שעות, א׳–ה׳.',
+        btn_whatsapp: 'לכתוב בוואטסאפ',
+        btn_how: 'איך אני עובד',
+        status_text: 'מקבל פרויקטים · מענה עד 4 שעות · א׳–ה׳ 09:00–19:00',
+        tile_label_1: 'אתר',
+        tile_label_2: 'בוט',
+        tile_label_3: 'מערכת',
+        tile_label_4: 'אוטומציה',
+        tiles_caption: 'ארבעה תחומים · הרביעי נכנס למקום',
+        sec_eyebrow: 'מה שכבר עובד',
+        sec_title: 'מערכות שנמצאות בשימוש יומיומי',
+        legend_badge_client: 'אצל לקוח',
+        legend_text_client: '— עובד בעסק אמיתי, שמות שונו',
+        legend_badge_public: 'פתוח לכולם',
+        legend_text_public: '— מוצר שלי',
+        legend_badge_self: 'לעצמי',
+        legend_text_self: '— עובד אצלי, אתאים לך',
+        legend_badge_demo: 'דמו',
+        legend_text_demo: '— עסק לדוגמה',
+        grp1_tag: '01 · קבוצה',
+        grp1_title: 'מערכות',
+        grp2_tag: '02 · קבוצה',
+        grp2_title: 'בוטים',
+        grp3_tag: '03 · קבוצה',
+        grp3_title: 'אוטומציה',
+        grp4_tag: '04 · קבוצה',
+        grp4_title: 'אתרים',
+        badge_client: 'אצל לקוח',
+        badge_public: 'פתוח לכולם',
+        badge_self: 'לעצמי',
+        badge_demo: 'דמו',
+        work1_title: 'מחסן נגריית רהיטים',
+        work1_desc: 'הזמנה מרכש עד חתימת הלקוח: סדנה, מחסן, יציאה לשטח, הרכבה. מותקן בטלפון, עברית ורוסית.',
+        work2_title: 'משמרות לרשת גלידריות',
+        work2_desc: 'העובד מסמן מתי פנוי; הבעלים מרכיב סידור ושולח לוואטסאפ בלחיצה אחת.',
+        work3_title: 'נוטרי — יומן תזונה',
+        work3_desc: 'רושם, מקליט או מצלם אוכל — הקלוריות מחושבות לבד. ישר בטלגרם.',
+        btn_open_tg: 'לפתוח בטלגרם',
+        work4_title: 'מעקב הוצאות רכב',
+        work4_desc: 'צילום קבלה מתחנת דלק — ושורה בדו״ח. בוט לאדם אחד, סגור.',
+        work5_title: 'עוזר בינה מלאכותית לשגרה',
+        work5_desc: 'ממיין לבד מיילים, חשבוניות ומסמכים. פועל על מנוי AI — הגדרה מותאמת עבורך, לא תוכנה גנרית.',
+        work6_title: 'כרטיס ביקור 3D',
+        work6_desc: 'משם הגעת לכאן.',
+        btn_open: 'לפתוח',
+        work7_title: 'מספרה וסלון יופי',
+        work7_desc: 'סלון לדוגמה: איך האתר נראה בטלפון, בטאבלט ובמחשב.'
+      },
+      en: {
+        dir: 'ltr',
+        nav_services: 'Services',
+        nav_works: 'Works',
+        nav_about: 'About',
+        nav_contact: 'Contact',
+        eyebrow: 'solo software engineer · Israel',
+        h1_line1: 'No agency layers.',
+        h1_line2: 'Direct communication.',
+        h1_line3: 'Price on Friday.',
+        hero_desc: 'Message me on WhatsApp — I review your Instagram and Google profile myself, and send a firm quote & timeline on Friday. Reply within 4h, Sun–Thu.',
+        btn_whatsapp: 'Message on WhatsApp',
+        btn_how: 'How I work',
+        status_text: 'accepting projects · replies <4h · sun–thu 09:00–19:00',
+        tile_label_1: 'website',
+        tile_label_2: 'bot',
+        tile_label_3: 'system',
+        tile_label_4: 'automation',
+        tiles_caption: 'four crafts · the fourth falls into place',
+        sec_eyebrow: 'already in production',
+        sec_title: 'Systems used every single day',
+        legend_badge_client: 'client internal',
+        legend_text_client: '— running in external business, names changed',
+        legend_badge_public: 'public access',
+        legend_text_public: '— my product',
+        legend_badge_self: 'internal use',
+        legend_text_self: '— runs in my workflow, can configure for you',
+        legend_badge_demo: 'demo',
+        legend_text_demo: '— concept business',
+        grp1_tag: '01 · group',
+        grp1_title: 'Systems',
+        grp2_tag: '02 · group',
+        grp2_title: 'Bots',
+        grp3_tag: '03 · group',
+        grp3_title: 'Automation',
+        grp4_tag: '04 · group',
+        grp4_title: 'Websites',
+        badge_client: 'client internal',
+        badge_public: 'public access',
+        badge_self: 'internal use',
+        badge_demo: 'demo',
+        work1_title: 'Furniture Workshop Inventory',
+        work1_desc: 'Order flow from purchasing to client sign-off: workshop, warehouse, site visit, installation. Installed on mobile, Hebrew & Russian.',
+        work2_title: 'Shift Scheduling for Ice Cream Chain',
+        work2_desc: 'Staff submits availability; owner compiles roster and sends via WhatsApp with one click.',
+        work3_title: 'Nutri — Daily Nutrition Journal',
+        work3_desc: 'Type, speak or snap photo — calories calculated automatically. Directly in Telegram.',
+        btn_open_tg: 'Open in Telegram',
+        work4_title: 'Vehicle Expense Tracker',
+        work4_desc: 'Photo of fuel receipt turns into ledger entry. Single-user private bot.',
+        work5_title: 'Custom AI Assistant for Daily Routine',
+        work5_desc: 'Triage of email, invoices, and docs. Runs on your AI subscription — tailored setup, not a rigid off-the-shelf app.',
+        work6_title: '3D Business Card',
+        work6_desc: 'The place you came here from.',
+        btn_open: 'Open',
+        work7_title: 'Beauty Salon',
+        work7_desc: 'Prototype salon: responsive layout across mobile, tablet, and desktop.'
+      }
+    };
+
+    let currentLang = 'ru';
+    const patinaTile = document.getElementById('patinaTile');
+    const labelPatina = document.getElementById('labelPatina');
+    const heroSection = document.getElementById('heroSection');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // 1. Hero scroll-driven animation
+    const START_ROT = 21.3;
+    const START_DX = 14.37;
+    const START_DY = 6.36;
+    let ticking = false;
+
+    function updateHeroTile() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isSnappedPreview = urlParams.get('snapped') === '1' || window.location.hash === '#snapped';
+
+      if (prefersReducedMotion.matches || isSnappedPreview) {
+        if (patinaTile) patinaTile.style.transform = 'translate(0%, 0%) rotate(0deg)';
+        if (labelPatina) labelPatina.classList.add('active');
+        return;
+      }
+
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+      const heroHeight = heroSection ? heroSection.offsetHeight : 600;
+      const threshold = Math.max(heroHeight * 0.40, 150);
+      const rawProgress = Math.min(Math.max(scrollY / threshold, 0), 1);
+      const eased = 1 - Math.pow(1 - rawProgress, 2.2);
+
+      const rot = (START_ROT * (1 - eased)).toFixed(3);
+      const dx = (START_DX * (1 - eased)).toFixed(3);
+      const dy = (START_DY * (1 - eased)).toFixed(3);
+
+      if (patinaTile) {
+        patinaTile.style.transform = `translate(${dx}%, ${dy}%) rotate(${rot}deg)`;
+      }
+
+      if (labelPatina) {
+        if (eased >= 0.85) {
+          labelPatina.classList.add('active');
+        } else {
+          labelPatina.classList.remove('active');
+        }
+      }
+    }
+
+    // 2. Works groups tiles snap: slight shift & rotate snap on scroll
+    // On mobile, triggers when tile reaches the middle of the screen
+    const snapTiles = document.querySelectorAll('.js-snap-tile');
+
+    function updateWorksTiles() {
+      if (prefersReducedMotion.matches) {
+        snapTiles.forEach(tile => tile.classList.add('is-snapped'));
+        return;
+      }
+
+      const isMobile = window.innerWidth <= 860;
+      // Trigger threshold: desktop ~75% viewport height, mobile ~52% (middle of screen)
+      const triggerRatio = isMobile ? 0.52 : 0.75;
+      const triggerY = window.innerHeight * triggerRatio;
+
+      snapTiles.forEach(tile => {
+        const rect = tile.getBoundingClientRect();
+        if (rect.top <= triggerY && rect.bottom >= 0) {
+          tile.classList.add('is-snapped');
+        } else if (rect.top > window.innerHeight * 0.95) {
+          // Reset when scrolled back well above
+          tile.classList.remove('is-snapped');
+        }
+      });
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateHeroTile();
+          updateWorksTiles();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => {
+      updateHeroTile();
+      updateWorksTiles();
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+      updateHeroTile();
+      updateWorksTiles();
+    });
+    updateHeroTile();
+    updateWorksTiles();
+
+    // 3. Language switcher
+    const langBtns = document.querySelectorAll('.lang-btn');
+    langBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.lang;
+        if (!i18nData[lang]) return;
+        currentLang = lang;
+
+        langBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        document.documentElement.lang = lang;
+        document.body.dir = i18nData[lang].dir;
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (i18nData[lang][key]) {
+            el.textContent = i18nData[lang][key];
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
