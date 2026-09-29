@@ -4091,9 +4091,12 @@
       const isRTL = document.body.dir === 'rtl';
       const isMobile = winW <= 860;
 
-      const dockSize = isMobile ? 36 : 48;
+      const dockSize = isMobile ? 32 : 48;
       const dockMargin = isMobile ? 8 : 24;
-      const dockX = isRTL ? dockMargin : (winW - dockSize - dockMargin);
+      // phone: the page gutter is ~20px, so the tile peeks out of the edge and never covers text (Ada 29.09)
+      const dockX = isMobile
+        ? (isRTL ? -(dockSize - 18) : (winW - 18))
+        : (isRTL ? dockMargin : (winW - dockSize - dockMargin));
       
       const wave = Math.sin(scrollY * 0.003) * 26;
       const dockY = (winH * 0.45) + wave;
