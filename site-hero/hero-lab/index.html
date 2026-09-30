@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Первый экран — цвет текста и анимация</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Hebrew:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Токены бренда ─────────────────────────────────────────────── */
+:root{
+  --lilac:#3F3A6B; --paper:#F7F6F2; --ink:#1A1C1B; --ink-soft:#2A2D2B; --muted:#57544D;
+  --signal:#EBCB3E; --signal-hover:#DFBF35;
+  --graphite:#1A1C1B; --graphite-text:#E6E4DE; --graphite-muted:#A3AAA6;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:"IBM Plex Sans",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* ── Панель выбора ─────────────────────────────────────────────── */
+.bar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid rgba(26,28,27,.14);padding:10px 16px 8px}
+.bar-in{max-width:1152px;margin:0 auto;display:grid;gap:8px}
+.row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.row .lbl{font-size:13px;color:var(--muted)}
+@media(min-width:640px){.row .lbl{min-width:84px}}
+.seg{display:flex;gap:4px}
+.seg button,.replay{font:inherit;font-size:15px;font-weight:600;height:44px;min-width:44px;padding:0 12px;border-radius:5px;
+  border:1px solid rgba(26,28,27,.28);background:transparent;color:var(--ink);cursor:pointer;
+  transition:background-color 120ms ease-out,color 120ms ease-out,border-color 120ms ease-out}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.seg button:focus-visible,.replay:focus-visible{outline:2px solid var(--lilac);outline-offset:2px}
+.replay{margin-inline-start:auto;font-weight:500;font-size:14px}
+.replay:active{transform:translateY(1px)}
+.now{font-size:13px;color:var(--muted);line-height:1.4}
+.now b{color:var(--ink);font-weight:600}
+
+/* ── Первый экран ──────────────────────────────────────────────── */
+.hero{position:relative;overflow:hidden;background-color:var(--lilac);
+  background-image:url("tex-lilac-plaster.webp"),url("tex-lilac-plaster.webp");
+  background-repeat:repeat;background-size:600px 600px;color:#fff}
+.hero[dir="rtl"]{font-family:"IBM Plex Sans Hebrew","IBM Plex Sans",system-ui,sans-serif}
+.wrap{max-width:1152px;margin:0 auto;padding:56px 24px 48px;display:grid;grid-template-columns:1fr;gap:40px}
+@media(min-width:640px){.wrap{padding:72px 40px 64px}}
+@media(min-width:1024px){.wrap{grid-template-columns:1fr 1fr;gap:64px;align-items:center;padding:96px 40px}}
+.copy{display:flex;flex-direction:column;align-items:flex-start;gap:28px}
+.eyebrow{font-size:13px;color:var(--meta)}
+h1{font-size:clamp(2.4rem,4.4vw,3.6rem);font-weight:700;line-height:1.14;letter-spacing:-.025em;color:var(--h1);text-wrap:balance}
+.hero[dir="rtl"] h1{letter-spacing:0}
+.ln{display:block;width:fit-content}
+.w{display:inline-block}
+.mk{position:relative;display:inline-block;padding-bottom:.02em}
+.mk::after{content:"";position:absolute;inset-inline:0;bottom:-.06em;height:.12em;background:var(--signal);transform-origin:left center}
+.hero[dir="rtl"] .mk::after{transform-origin:right center}
+.card{display:flex;flex-direction:column;align-items:flex-start;gap:24px}
+.lead{max-width:28rem;font-size:16px;line-height:1.65;color:var(--lead);text-wrap:pretty}
+@media(min-width:640px){.lead{font-size:18px}}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;border-radius:5px;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer}
+.btn-signal{background:var(--signal);color:var(--ink);border:1px solid var(--signal);transition:background-color 120ms ease-out,box-shadow 120ms ease-out,transform 120ms ease-out}
+.btn-signal:hover{background:var(--signal-hover);border-color:var(--signal-hover);box-shadow:inset 0 -2px 0 rgba(26,28,27,.18)}
+.btn-signal:active{transform:translateY(1px);box-shadow:none}
+.btn-ghost{border:1px solid var(--ghost-border);color:var(--ghost-text);background:transparent;transition:border-color 120ms ease-out}
+.btn-ghost:hover{border-color:var(--ghost-text)}
+.live{font-size:13px;color:var(--meta)}
+
+.tiles{display:flex;flex-direction:column;align-items:center}
+.stage{position:relative;width:100%;max-width:540px;aspect-ratio:1200/896}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;user-select:none}
+.patina{position:absolute;top:51.56%;left:50.67%;width:24.42%;height:32.5%;background:url("tile-patina-v5.webp"),url("tile-patina-v5.webp");background-size:100% 100%;filter:drop-shadow(0 14px 26px rgba(16,12,34,.48))}
+.tl{position:absolute;display:inline-flex;align-items:center;white-space:nowrap;font-size:11px;font-weight:500;letter-spacing:.02em;color:var(--label)}
+.tl::before{content:"";width:4px;height:4px;border-radius:1px;background:currentColor;opacity:.5;margin-inline-end:6px}
+.tl.dim{opacity:.5}
+.caption{margin-top:20px;font-size:12px;font-weight:500;letter-spacing:.08em;color:var(--meta);text-align:center}
+.plinth{display:none}
+
+/* ── Цвет 1 · «Бумага» — вторичный текст тёплый нейтральный, ступенями по светлоте ── */
+.hero[data-color="1"]{--h1:#F7F6F2;--lead:#E4E1D8;--meta:#C9C4B8;--label:#E4E1D8;--ghost-border:rgba(247,246,242,.38);--ghost-text:#F7F6F2}
+
+/* ── Цвет 2 · «Карточка» — лид, кнопки и строка ответа лежат на бумаге ── */
+.hero[data-color="2"]{--h1:#F7F6F2;--lead:#1A1C1B;--meta:#E4E1D8;--label:#F7F6F2;--ghost-border:rgba(26,28,27,.3);--ghost-text:#1A1C1B}
+.hero[data-color="2"] .card{background:var(--paper);color:var(--ink);padding:22px 20px;border-radius:10px;max-width:30rem;width:100%;
+  box-shadow:0 10px 28px rgba(16,12,34,.22),inset 0 1px 0 rgba(255,255,255,.5)}
+@media(min-width:640px){.hero[data-color="2"] .card{padding:26px 28px}}
+.hero[data-color="2"] .card .live{color:var(--muted)}
+.hero[data-color="2"] .btn-signal{box-shadow:inset 0 -2px 0 rgba(26,28,27,.28)}
+.hero[data-color="2"] .lead{font-size:16px}
+
+/* ── Цвет 3 · «Глина и графит» — третий нейтральный: цвет неглазурованной керамики + графитовый плинтус ── */
+.hero[data-color="3"]{--h1:#F7F6F2;--lead:#DCCFB8;--meta:#CDBFA6;--label:#DCCFB8;--ghost-border:rgba(220,207,184,.45);--ghost-text:#F7F6F2}
+.hero[data-color="3"] .card .live{display:none}
+.hero[data-color="3"] .plinth{display:block;background:var(--graphite);color:var(--graphite-text);font-size:13px}
+.plinth-in{max-width:1152px;margin:0 auto;padding:14px 24px;display:flex;flex-wrap:wrap;gap:4px 16px}
+@media(min-width:640px){.plinth-in{padding:16px 40px}}
+.plinth .price{color:var(--graphite-muted)}
+
+/* ── Анимации. Правило для всех: текст виден с первого кадра (LCP не страдает),
+      ключевые кадры задают только НАЧАЛО, конец = обычное состояние.
+      Поэтому «без движения» = просто animation:none. ── */
+
+/* A · Вдавливание: строка лежит «приподнятой» с жёсткой тенью и садится в раствор */
+.hero.play[data-anim="A"] .ln{animation:press 460ms cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 120ms)}
+@keyframes press{
+  0%{transform:translateY(-.2em);text-shadow:0 .2em 0 rgba(16,12,34,.5)}
+  72%{transform:translateY(.03em);text-shadow:0 0 0 rgba(16,12,34,.5)}
+  100%{transform:none;text-shadow:0 0 0 rgba(16,12,34,0)}
+}
+
+/* B · Выравнивание: слова привезли сбитыми — та же поза, что у плитки «Стенд» на сайте — и их ставят ровно */
+.hero.play[data-anim="B"] .w{animation:align 480ms var(--ease-out) both;animation-delay:calc(var(--wi) * 45ms)}
+@keyframes align{from{transform:translate(var(--dx),var(--dy)) rotate(var(--r))}}
+.hero.play[data-anim="B"] .mk::after{animation:draw 260ms var(--ease-out) both;animation-delay:var(--mkd,560ms)}
+@keyframes draw{from{transform:scaleX(0)}}
+
+/* C · Смывка налёта: заголовок проявлен «под плёнкой затирки», губка проходит — буквы становятся бумажными */
+.hero.play[data-anim="C"] .ln{
+  color:transparent;-webkit-text-fill-color:transparent;
+  background-image:linear-gradient(90deg,var(--h1) 0 50%,#948DC9 50% 100%);
+  background-size:200% 100%;background-position:0 0;
+  -webkit-background-clip:text;background-clip:text;
+  animation:wash 560ms cubic-bezier(.65,0,.35,1) both;animation-delay:calc(var(--i) * 140ms)}
+.hero[dir="rtl"].play[data-anim="C"] .ln{background-image:linear-gradient(270deg,var(--h1) 0 50%,#948DC9 50% 100%);background-position:100% 0}
+@keyframes wash{from{background-position:100% 0}}
+.hero[dir="rtl"].play[data-anim="C"] .ln{animation-name:wash-rtl}
+@keyframes wash-rtl{from{background-position:0 0}}
+/* Safari клипует текст потомков надёжнее, когда они строчные */
+.hero[data-anim="C"] .w,.hero[data-anim="C"] .mk{display:inline}
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){
+  .hero.play[data-anim="C"] .ln{color:var(--h1);-webkit-text-fill-color:currentColor;background:none}
+}
+
+/* D · Печать пятницы: всё стоит, двигается один маркер — прижимается, как штамп, строка чуть проседает */
+.hero.play[data-anim="D"] .mk::after{animation:stamp 240ms cubic-bezier(.3,.7,.2,1) both;animation-delay:300ms}
+@keyframes stamp{
+  0%{transform:translateY(-.22em) scaleY(2.2);opacity:0}
+  45%{transform:translateY(.02em) scaleY(.85);opacity:1}
+}
+.hero.play[data-anim="D"] .ln3{animation:nudge 200ms ease-out both;animation-delay:390ms}
+@keyframes nudge{50%{transform:translateY(.03em)}}
+
+/* Честное «уменьшить движение»: всё сразу в конечном состоянии */
+@media (prefers-reduced-motion:reduce){
+  .hero:not(.force) *,.hero:not(.force) *::after{animation:none!important}
+  .seg button,.btn-signal,.btn-ghost{transition:none}
+}
+.rm-note{display:none;max-width:1152px;margin:0 auto;padding:10px 16px;font-size:13px;color:var(--muted)}
+.rm-note button{font:inherit;text-decoration:underline;background:none;border:0;color:var(--ink);cursor:pointer}
+@media (prefers-reduced-motion:reduce){.rm-note{display:block}}
+
+/* ── Пояснения под экраном ─────────────────────────────────────── */
+.notes{max-width:1152px;margin:0 auto;padding:40px 16px 72px;display:grid;gap:36px}
+@media(min-width:640px){.notes{padding:56px 40px 96px}}
+.notes h2{font-size:22px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
+.notes .sub{color:var(--muted);font-size:15px;margin-bottom:16px;max-width:44rem}
+.opts{display:grid;gap:12px}
+@media(min-width:900px){.opts{grid-template-columns:repeat(2,1fr)}}
+.opt{border:1px solid rgba(26,28,27,.14);border-radius:8px;padding:16px;background:#fff}
+.opt.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.opt h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.opt p{font-size:15px;color:var(--ink-soft)}
+.opt .why{margin-top:8px;font-size:14px;color:var(--muted)}
+.opt .pick{margin-top:10px;font:inherit;font-size:14px;font-weight:600;height:40px;padding:0 14px;border-radius:5px;border:1px solid rgba(26,28,27,.28);background:transparent;cursor:pointer}
+.rec{border-inline-start:3px solid var(--lilac);padding:4px 0;padding-inline-start:14px;font-size:16px;max-width:46rem}
+.rec b{font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="bar" role="region" aria-label="Выбор варианта">
+  <div class="bar-in">
+    <div class="row">
+      <span class="lbl">Цвет текста</span>
+      <div class="seg" data-group="color">
+        <button type="button" data-v="1" aria-pressed="true">1</button>
+        <button type="button" data-v="2" aria-pressed="false">2</button>
+        <button type="button" data-v="3" aria-pressed="false">3</button>
+      </div>
+      <div class="seg" data-group="lang" style="margin-inline-start:auto">
+        <button type="button" data-v="ru" aria-pressed="true">RU</button>
+        <button type="button" data-v="he" aria-pressed="false">HE</button>
+      </div>
+    </div>
+    <div class="row">
+      <span class="lbl">Анимация</span>
+      <div class="seg" data-group="anim">
+        <button type="button" data-v="A" aria-pressed="true">A</button>
+        <button type="button" data-v="B" aria-pressed="false">B</button>
+        <button type="button" data-v="C" aria-pressed="false">C</button>
+        <button type="button" data-v="D" aria-pressed="false">D</button>
+      </div>
+      <button type="button" class="replay" id="replay" aria-label="Повторить анимацию">↻ Заново</button>
+    </div>
+    <p class="now" id="now" aria-live="polite"></p>
+  </div>
+</div>
+
+<p class="rm-note">На телефоне включено «уменьшить движение» — анимации выключены, так же будет и на сайте. <button type="button" id="force">Показать всё равно</button></p>
+
+<section class="hero play" id="hero" data-color="1" data-anim="A" dir="ltr" lang="ru">
+  <div class="wrap">
+    <div class="copy">
+      <p class="eyebrow" data-t="eyebrow"></p>
+      <h1 id="h1"></h1>
+      <div class="card">
+        <p class="lead" data-t="lead"></p>
+        <div class="btns">
+          <a class="btn btn-signal" href="#" onclick="return false">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="#1A1C1B" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.87 9.87 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.46 17.5 2 12.04 2Zm5.43 12.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.18.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.68-1.61-.93-2.22-.24-.59-.49-.51-.67-.52h-.57c-.2 0-.52.08-.79.37C6.76 7.03 6 7.74 6 9.18s1.05 2.83 1.2 3.03c.15.2 2.07 3.16 5.02 4.43.7.31 1.25.49 1.68.63.7.22 1.34.19 1.84.11.56-.08 1.72-.7 1.96-1.38.24-.68.24-1.26.17-1.38-.07-.12-.25-.19-.55-.34Z"/></svg>
+            <span data-t="cta1"></span>
+          </a>
+          <a class="btn btn-ghost" href="#" onclick="return false"><span data-t="cta2"></span></a>
+        </div>
+        <p class="live" data-t="live"></p>
+      </div>
+    </div>
+    <div class="tiles">
+      <div class="stage">
+        <img src="tiles-base-v6.webp" onerror="this.onerror=null;this.src='../hue/tiles-base-v6.webp'" alt="Четыре керамические плитки">
+        <div class="patina" aria-hidden="true"></div>
+        <span class="tl" style="top:10.5%;inset-inline-start:25.08%" data-t="t1"></span>
+        <span class="tl" style="top:10.5%;inset-inline-start:50.67%" data-t="t2"></span>
+        <span class="tl" style="top:88.5%;inset-inline-start:25.08%" data-t="t3"></span>
+        <span class="tl dim" style="top:88.5%;inset-inline-start:50.67%" data-t="t4"></span>
+      </div>
+      <p class="caption" data-t="caption"></p>
+    </div>
+  </div>
+  <div class="plinth"><div class="plinth-in"><span data-t="live"></span><span class="price" data-t="price"></span></div></div>
+</section>
+
+<div class="notes">
+  <section>
+    <h2>Почему сейчас «сиреневый на сиреневом»</h2>
+    <p class="sub">Контраст у старого вторичного цвета #BBB4E5 на сирени нормальный, 5,3:1, дело не в нём. Беда в том, что это та же сирень, только светлее: фон, описание, строка ответа, подписи плиток и надзаголовок — пять ступеней одного оттенка. Глазу не за что зацепиться, а описание (главный текст после заголовка) выглядит так же, как мелкая подпись под плитками. Отсюда ощущение «бедно»: весь экран покрашен одной краской.</p>
+    <div class="opts" id="colorOpts">
+      <div class="opt" data-color="1"><h3>1 · Бумага</h3><p>Весь текст становится тёплым нейтральным, цвета бумаги, в три ступени по светлоте: заголовок, описание, мелочь. Сирень остаётся только в поле.</p><p class="why">Самая маленькая правка: меняем только цвета текста, раскладка та же. Тёплый текст на холодной сирени — это контраст температур, а не оттенков. Все пары ≥ 5,9:1.</p><button class="pick" type="button" data-pick-color="1">Показать</button></div>
+      <div class="opt" data-color="2"><h3>2 · Карточка</h3><p>Заголовок остаётся на сирени, а описание, кнопки и «отвечу до…» лежат на бумажной карточке графитовым текстом, как записка с ценой.</p><p class="why">Роли меняются: сирень держит заголовок, бумага держит смысл. Читается лучше всего (графит на бумаге ~16:1). Минус: на экране становится больше «блоков», карточку придётся повторить в блоке связи.</p><button class="pick" type="button" data-pick-color="2">Показать</button></div>
+      <div class="opt" data-color="3"><h3>3 · Глина и графит</h3><p>Третий нейтральный — цвет неглазурованной керамики (#DCCFB8) для описания и подписей. Строка «отвечу до…» уходит в графитовый плинтус внизу экрана.</p><p class="why">Самый «материальный»: глина — это обратная сторона той же плитки. Плинтус делает стык с остальной страницей и даёт место цене-ориентиру. Контраст ≥ 5,7:1.</p><button class="pick" type="button" data-pick-color="3">Показать</button></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Анимация заголовка</h2>
+    <p class="sub">Во всех четырёх текст виден с первого кадра: ничего не «проявляется из пустоты», поэтому скорость загрузки не страдает. Движение — только трансформации и цвет, без библиотек, ~20–40 строк CSS. На иврите направление само разворачивается. Если на телефоне включено «уменьшить движение», экран сразу стоит в финальном виде.</p>
+    <div class="opts" id="animOpts">
+      <div class="opt" data-anim="A"><h3>A · Вдавливание</h3><p>Каждая строка лежит чуть приподнятой, с жёсткой тенью под собой, и садится на место, как плитка в раствор. 3 строки, 460 мс каждая, шаг 120 мс.</p><p class="why">Не попса: обычно текст «выплывает» из прозрачности снизу вверх. Здесь он никуда не выплывает — он уже есть и меняет глубину. Где: заголовок первого экрана; тот же жест у кнопки при нажатии.</p><button class="pick" type="button" data-pick-anim="A">Показать</button></div>
+      <div class="opt" data-anim="B"><h3>B · Выравнивание</h3><p>Слова стоят чуть криво, как только что привезённые плитки, и за полсекунды выравниваются в ровный ряд. Потом прорисовывается жёлтый маркер под «ценой в пятницу».</p><p class="why">Не попса: это не «слово за словом появляется», слова видны сразу — меняется только порядок. Повторяет жест плитки «Стенд», который на сайте уже есть, — один язык движения. Где: первый экран и заголовки блоков (один раз, при первом показе).</p><button class="pick" type="button" data-pick-anim="B">Показать</button></div>
+      <div class="opt" data-anim="C"><h3>C · Смывка налёта</h3><p>Заголовок сначала приглушённый, в цвет сирени, как плитка под плёнкой затирки. Губка проходит по строкам, и буквы становятся бумажными.</p><p class="why">Не попса: это не переливающийся градиент, граница жёсткая и проходит один раз. Плиточники в конце работы правда смывают налёт. Заодно это ответ на «сиреневый на сиреневом»: экран сам из него выходит. Где: только первый экран.</p><button class="pick" type="button" data-pick-anim="C">Показать</button></div>
+      <div class="opt" data-anim="D"><h3>D · Печать пятницы</h3><p>Всё стоит неподвижно. Двигается одно: жёлтый маркер под «Цена в пятницу» прижимается, как штамп, и строка на миг проседает. 240 мс.</p><p class="why">Не попса: одна деталь вместо анимации «всего подряд». Жёлтый и так сигнал, штамп — про обещание цены. Где: первый экран; тот же штамп — у цен-ориентиров ниже.</p><button class="pick" type="button" data-pick-anim="D">Показать</button></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Что советую</h2>
+    <p class="rec"><b>Цвет 1 «Бумага» + анимация A «Вдавливание»</b>, а B оставить для заголовков блоков ниже. «Бумага» убирает монотонность самой маленькой правкой и не добавляет на экран новых блоков. «Вдавливание» — самое спокойное и самое «наше» движение: плитка садится на место, текст при этом на месте с первого кадра. Если хочется, чтобы экран «рассказывал историю», — C, она красиво решает именно твою претензию, но это более заметный жест.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+  var T={
+    ru:{eyebrow:"Независимый разработчик · Израиль",
+      h:["Без агентства.","Один на проекте.","Цена в пятницу."],
+      lead:"Пишешь в WhatsApp. Я сам смотрю твой Instagram и Google-карточку и в пятницу присылаю цену и сроки.",
+      cta1:"Написать в WhatsApp",cta2:"Как я работаю",
+      live:'отвечу сегодня до <span class="mono">13:00</span>',
+      price:'цена и сроки — в пятницу',
+      t1:"сайт",t2:"бот",t3:"система",t4:"автоматизация",
+      caption:"четыре дела · четвёртое встаёт на место"},
+    he:{eyebrow:"מפתח עצמאי · ישראל",
+      h:["בלי סוכנות.","אחד מולך.","מחיר ביום שישי."],
+      lead:"אתה כותב לי בוואטסאפ. אני בודק בעצמי את האינסטגרם וכרטיס הגוגל שלך, ובשישי שולח מחיר ולוח זמנים.",
+      cta1:"לכתוב בוואטסאפ",cta2:"איך אני עובד",
+      live:'אענה היום עד <span class="mono">13:00</span>',
+      price:'מחיר ולוח זמנים — ביום שישי',
+      t1:"אתר",t2:"בוט",t3:"מערכת",t4:"אוטומציה",
+      caption:"ארבעה תחומים · הרביעי נכנס למקום"}
+  };
+  var NAMES={color:{"1":"Бумага","2":"Карточка","3":"Глина и графит"},anim:{A:"Вдавливание",B:"Выравнивание",C:"Смывка налёта",D:"Печать пятницы"}};
+  /* детерминированный «разброс» для B: наклон и сдвиг каждого слова */
+  var R=[-6,4,-3,7,-5,3,-7,5,-4,6,-2,5], DX=[-.06,.05,-.03,.07,-.05,.04,-.07,.03,-.04,.06,-.02,.05], DY=[-.1,.06,-.05,.09,-.08,.04,-.1,.07,-.06,.08,-.04,.06];
+  var hero=document.getElementById('hero'), h1=document.getElementById('h1'), now=document.getElementById('now');
+  var st={color:"1",anim:"A",lang:"ru"};
+
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+  function buildH1(lines){
+    var wi=0,html="";
+    lines.forEach(function(line,i){
+      var words=line.split(" ").map(function(w){
+        var k=wi%R.length, s='<span class="w" style="--wi:'+wi+';--r:'+R[k]+'deg;--dx:'+DX[k]+'em;--dy:'+DY[k]+'em">'+esc(w)+'</span>';
+        wi++; return s;}).join(" ");
+      if(i===2){ html+='<span class="ln ln3" style="--i:2"><span class="mk">'+words+'</span></span>'; }
+      else { html+='<span class="ln" style="--i:'+i+'">'+words+'</span>'; }
+    });
+    h1.innerHTML=html;
+    /* маркер в B рисуется, когда встало последнее слово */
+    hero.style.setProperty('--mkd',((wi-1)*45+380)+'ms');
+  }
+  function render(){
+    var t=T[st.lang];
+    hero.setAttribute('dir',st.lang==="he"?"rtl":"ltr");
+    hero.setAttribute('lang',st.lang);
+    hero.dataset.color=st.color; hero.dataset.anim=st.anim;
+    buildH1(t.h);
+    document.querySelectorAll('[data-t]').forEach(function(el){el.innerHTML=t[el.getAttribute('data-t')]});
+    now.innerHTML='Сейчас: <b>цвет '+st.color+' · '+NAMES.color[st.color]+'</b> и <b>анимация '+st.anim+' · '+NAMES.anim[st.anim]+'</b>. Описание каждого — под экраном.';
+    document.querySelectorAll('.seg').forEach(function(seg){
+      var g=seg.getAttribute('data-group');
+      seg.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-v')===st[g]))});
+    });
+    document.querySelectorAll('#colorOpts .opt').forEach(function(o){o.classList.toggle('on',o.getAttribute('data-color')===st.color)});
+    document.querySelectorAll('#animOpts .opt').forEach(function(o){o.classList.toggle('on',o.getAttribute('data-anim')===st.anim)});
+    replay();
+  }
+  function replay(){
+    hero.classList.remove('play');
+    void hero.offsetWidth;          /* сброс, чтобы анимация пошла заново */
+    hero.classList.add('play');
+  }
+  document.querySelectorAll('.seg button').forEach(function(b){
+    b.addEventListener('click',function(){st[b.parentNode.getAttribute('data-group')]=b.getAttribute('data-v');render();});
+  });
+  document.querySelectorAll('[data-pick-color]').forEach(function(b){b.addEventListener('click',function(){st.color=b.getAttribute('data-pick-color');render();window.scrollTo({top:0,behavior:'smooth'});})});
+  document.querySelectorAll('[data-pick-anim]').forEach(function(b){b.addEventListener('click',function(){st.anim=b.getAttribute('data-pick-anim');render();window.scrollTo({top:0,behavior:'smooth'});})});
+  document.getElementById('replay').addEventListener('click',replay);
+  document.getElementById('force').addEventListener('click',function(){hero.classList.add('force');replay();});
+  render();
+})();
+</script>
+</body>
+</html>
